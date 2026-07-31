@@ -416,42 +416,44 @@ until $\|\bm\sigma^{(j)}\|<10^{-3}$ (max 30 iterations).
 
 \subsection{High-Level Architecture}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[
-  node distance=0.6cm and 1.0cm,
+  node distance=0.8cm and 1.2cm,
   box/.style={draw=lieblue, fill=liegray, rounded corners=6pt,
-              minimum width=2.9cm, minimum height=1.0cm,
+              minimum width=3.1cm, minimum height=1.1cm,
               align=center, font=\small, line width=1.0pt},
   sensor/.style={draw=lieaccent, fill=lieaccent!10, rounded corners=6pt,
-                 minimum width=2.9cm, minimum height=0.9cm,
+                 minimum width=3.1cm, minimum height=1.0cm,
                  align=center, font=\small\bfseries, line width=1.0pt},
   output/.style={draw=liegreen, fill=liegreen!10, rounded corners=6pt,
-                 minimum width=3.2cm, minimum height=0.9cm,
+                 minimum width=3.4cm, minimum height=1.0cm,
                  align=center, font=\small\bfseries, line width=1.0pt},
   arr/.style={-{Stealth[length=5pt]}, thick, lieblue}
 ]
 \node[sensor] (imu) {IMU\\$(\fib,\,\wib)$};
-\node[sensor, right=3.5cm of imu] (gps) {GNSS Receiver\\$(\mathbf{y}_k)$};
-\node[box, below=1.2cm of imu] (omega) {\texttt{Omega.m}\\Kinematics $\Omega$};
-\node[box, right=0.9cm of omega] (sigpred) {\texttt{SigmaPointsLie}\\$\Xi$ generation};
-\node[box, right=0.9cm of sigpred] (pred) {\texttt{prediction}\\UKF-Lie};
-\node[box, right=0.9cm of pred] (upd) {\texttt{Update}\\UKF-Lie};
-\node[box, below=1.3cm of sigpred] (mean) {\texttt{media\_nula\_g}\\Mean on $\mathcal{G}$};
-\node[box, right=0.9cm of mean] (cov) {\texttt{covariancias}\\$\mathbf{P}_{gh},\mathbf{P}_{hh}$};
-\node[output, below=1.3cm of pred] (state) {Nav. State $\bX_{k|k}$};
-\node[output, right=0.9cm of state] (euler) {Euler Angles\\$(\phi,\theta,\psi)$};
+\node[sensor, right=3.8cm of imu] (gps) {GNSS Receiver\\$(\mathbf{y}_k)$};
+\node[box, below=1.4cm of imu] (omega) {\texttt{Omega.m}\\Kinematics $\Omega$};
+\node[box, right=1.0cm of omega] (sigpred) {\texttt{SigmaPointsLie}\\$\Xi$ generation};
+\node[box, right=1.0cm of sigpred] (pred) {\texttt{prediction}\\UKF-Lie};
+\node[box, right=1.0cm of pred] (upd) {\texttt{Update}\\UKF-Lie};
+\node[box, below=1.5cm of sigpred] (mean) {\texttt{media\_nula\_g}\\Mean on $\mathcal{G}$};
+\node[box, right=1.0cm of mean] (cov) {\texttt{covariancias}\\$\mathbf{P}_{gh},\mathbf{P}_{hh}$};
+\node[output, below=1.5cm of pred] (state) {Nav. State $\bX_{k|k}$};
+\node[output, right=1.0cm of state] (euler) {Euler Angles\\$(\phi,\theta,\psi)$};
 \draw[arr] (imu) -- (omega);
 \draw[arr] (omega) -- (sigpred);
 \draw[arr] (sigpred) -- (pred);
 \draw[arr] (pred) -- (upd);
-\draw[arr] (gps) -- ++(0,-1.8) -| (upd);
+\draw[arr] (gps) -- ++(0,-2.1) -| (upd);
 \draw[arr] (pred) -- (mean);
 \draw[arr] (mean) -- (cov);
 \draw[arr] (cov) -- (upd);
 \draw[arr] (upd) -- (state);
 \draw[arr] (state) -- (euler);
-\draw[arr] (upd.south) -- ++(0,-0.4) -- ++(-5.0,0) |- (sigpred.west);
+% feedback loop routed below all bottom-row nodes
+\draw[arr] (upd.south) -- ++(0,-0.6)
+           -- ++(-5.7,0) |- (sigpred.west);
 \end{tikzpicture}
 \caption{High-level architecture and data flow of the UKF-Lie system.}
 \label{fig:architecture}
@@ -459,27 +461,40 @@ until $\|\bm\sigma^{(j)}\|<10^{-3}$ (max 30 iterations).
 
 \subsection{Prediction Flowchart}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[
-  node distance=0.42cm,
+  node distance=0.55cm,
   start/.style={draw=lieblue, fill=lieblue, text=white, rounded corners=15pt,
-                minimum width=6.5cm, minimum height=0.7cm, font=\small\bfseries},
-  step/.style={draw=lieblue!70!black, fill=liegray, rounded corners=4pt,
-               minimum width=6.5cm, minimum height=0.85cm,
+                minimum width=7.8cm, minimum height=0.75cm, font=\small\bfseries},
+  flowstep/.style={draw=lieblue!70!black, fill=liegray, rounded corners=4pt,
+               minimum width=7.8cm, minimum height=1.0cm,
+               text width=7.4cm,
                align=center, font=\small, line width=0.8pt},
   arr/.style={-{Stealth[length=5pt]}, thick, lieblue!80!black}
 ]
 \node[start] (s0) {Prediction Start};
-\node[step, below=0.45cm of s0] (s1) {Build augmented covariance $\mathbf{P}_\eta=\mathrm{blkdiag}(\bP,\bQ,\bR)\in\mathbb{R}^{33\times33}$};
-\node[step, below=0.42cm of s1] (s2) {Cholesky: $\mathbf{S}=\mathrm{chol}(\mathbf{P}_\eta)^\top$ (regularise if non-PD)};
-\node[step, below=0.42cm of s2] (s3) {Generate $2L+1=67$ sigma points $\bm\xi^{(i)}$};
-\node[step, below=0.42cm of s3] (s4) {Split: $\bm\xi^{(i)}\to(\bm{e}^{(i)},\mathbf{q}^{(i)},\mathbf{r}^{(i)})$};
-\node[step, below=0.42cm of s4] (s5) {Pre-compute $(\lambda_0,g_0,\mathbf{C}_{en},\mathbf{g}^e)$ from $\bX_{k-1}$ once};
-\node[step, below=0.42cm of s5] (s6) {$\forall i$: lift $\mathcal{X}^{(i)}=\bX\Exp(\bm{e}^{(i)})$, propagate $\mathcal{X}_{k|k-1}^{(i)}$};
-\node[step, below=0.42cm of s6] (s7) {Iterative Frechet mean $\to\bar{\mathbf{X}}_k$ (LU reuse)};
-\node[step, below=0.42cm of s7] (s8) {$\bm\varepsilon^{(i)}=\Log(\bar{\mathbf{X}}_k^{-1}\mathcal{X}^{(i)})$, compute $\bP_{k|k-1}$};
-\node[start, below=0.45cm of s8] (s9) {Output $(\bar{\mathbf{X}}_k,\bP_{k|k-1},\{\mathcal{X}^{(i)}\},\{\mathbf{r}^{(i)}\})$};
+\node[flowstep, below=0.55cm of s0] (s1)
+  {Build augmented covariance
+   $\mathbf{P}_\eta=\mathrm{blkdiag}(\bP,\bQ,\bR)\in\mathbb{R}^{33\times33}$};
+\node[flowstep, below=0.55cm of s1] (s2)
+  {Cholesky: $\mathbf{S}=\mathrm{chol}(\mathbf{P}_\eta)^\top$ (regularise if non-PD)};
+\node[flowstep, below=0.55cm of s2] (s3)
+  {Generate $2L+1=67$ sigma points $\bm\xi^{(i)}$};
+\node[flowstep, below=0.55cm of s3] (s4)
+  {Split: $\bm\xi^{(i)}\to\bigl(\bm{e}^{(i)},\mathbf{q}^{(i)},\mathbf{r}^{(i)}\bigr)$};
+\node[flowstep, below=0.55cm of s4] (s5)
+  {Pre-compute $(\lambda_0,g_0,\mathbf{C}_{en},\mathbf{g}^e)$ from $\bX_{k-1}$ once};
+\node[flowstep, below=0.55cm of s5] (s6)
+  {$\forall\,i$: lift $\mathcal{X}^{(i)}=\bX\Exp(\bm{e}^{(i)})$,
+   propagate $\mathcal{X}_{k|k-1}^{(i)}$};
+\node[flowstep, below=0.55cm of s6] (s7)
+  {Iterative Fréchet mean $\to\bar{\mathbf{X}}_k$ (LU reuse)};
+\node[flowstep, below=0.55cm of s7] (s8)
+  {$\bm\varepsilon^{(i)}=\Log\!\left(\bar{\mathbf{X}}_k^{-1}\mathcal{X}^{(i)}\right)$,
+   compute $\bP_{k|k-1}$};
+\node[start, below=0.55cm of s8] (s9)
+  {Output $(\bar{\mathbf{X}}_k,\bP_{k|k-1},\{\mathcal{X}^{(i)}\},\{\mathbf{r}^{(i)}\})$};
 \foreach \a/\b in {s0/s1,s1/s2,s2/s3,s3/s4,s4/s5,s5/s6,s6/s7,s7/s8,s8/s9}
   \draw[arr] (\a) -- (\b);
 \end{tikzpicture}
@@ -489,33 +504,52 @@ until $\|\bm\sigma^{(j)}\|<10^{-3}$ (max 30 iterations).
 
 \subsection{Update Flowchart}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[
-  node distance=0.42cm,
+  node distance=0.55cm,
   start/.style={draw=liegreen!80!black, fill=liegreen!70!black, text=white,
                 rounded corners=15pt,
-                minimum width=6.5cm, minimum height=0.7cm, font=\small\bfseries},
-  step/.style={draw=liegreen!60!black, fill=liegreen!7, rounded corners=4pt,
-               minimum width=6.5cm, minimum height=0.85cm,
+                minimum width=7.8cm, minimum height=0.75cm, font=\small\bfseries},
+  flowstep/.style={draw=liegreen!60!black, fill=liegreen!7, rounded corners=4pt,
+               minimum width=7.8cm, minimum height=1.0cm,
+               text width=7.4cm,
                align=center, font=\small, line width=0.8pt},
-  decide/.style={draw=lieaccent, fill=lieaccent!10, diamond, aspect=2.5,
-                 minimum width=5cm, align=center, font=\small},
+  decide/.style={draw=lieaccent, fill=lieaccent!10, diamond, aspect=3.0,
+                 minimum width=7cm, align=center, font=\small},
   arr/.style={-{Stealth[length=5pt]}, thick, liegreen!70!black},
   sarr/.style={-{Stealth[length=5pt]}, thick, lieaccent}
 ]
-\node[decide] (check) {GNSS epoch? $|t_k-t_{\mathrm{GPS}}|<\Delta t$};
-\node[start, below=0.6cm of check] (u0) {Update Start};
-\node[step, below=0.42cm of u0] (u1) {Meas. sigma pts $\mathcal{Y}^{(i)}\leftarrow h(\mathcal{X}^{(i)})+\mathbf{r}^{(i)}$};
-\node[step, below=0.42cm of u1] (u2) {Predicted meas. mean $\bar{\mathbf{y}}$ (\texttt{media\_nula\_h})};
-\node[step, below=0.42cm of u2] (u3) {Compute $\mathbf{P}_{hh}$, $\mathbf{P}_{gh}$ (\texttt{covariancias})};
-\node[step, below=0.42cm of u3] (u4) {Kalman gain $\bK=(\mathbf{P}_{hh}^{-1}\mathbf{P}_{gh}^\top)^\top$};
-\node[step, below=0.42cm of u4] (u5) {Innovation $\bm\delta_t=\mathbf{y}_k-\bar{\mathbf{y}}$, $\bm\varepsilon=\bK\bm\delta_t$};
-\node[step, below=0.42cm of u5] (u6) {State retraction: $\bX_{k|k}=\bar{\mathbf{X}}_k\Exp(\bm\varepsilon)$};
-\node[step, below=0.42cm of u6] (u7) {Cov. update: $\bP_{k|k}=\bP_{k|k-1}-\bK\mathbf{P}_{gh}^\top$, symmetrize};
-\node[start, below=0.45cm of u7] (u8) {Output $(\bX_{k|k},\bP_{k|k})$};
-\draw[sarr] (check) -- node[right,font=\small]{yes} (u0);
-\draw[sarr] (check) -- ++(4,0) node[right,font=\small,lieaccent]{skip};
+\node[decide] (check)
+  {GNSS epoch?\quad $|t_k-t_{\mathrm{GPS}}|<\Delta t$};
+\node[start, below=0.75cm of check] (u0) {Update Start};
+\node[flowstep, below=0.55cm of u0] (u1)
+  {Meas.\ sigma pts
+   $\mathcal{Y}^{(i)}\leftarrow h\bigl(\mathcal{X}^{(i)}\bigr)+\mathbf{r}^{(i)}$};
+\node[flowstep, below=0.55cm of u1] (u2)
+  {Predicted meas.\ mean $\bar{\mathbf{y}}$
+   (\texttt{media\_nula\_h})};
+\node[flowstep, below=0.55cm of u2] (u3)
+  {Compute $\mathbf{P}_{hh}$, $\mathbf{P}_{gh}$
+   (\texttt{covariancias})};
+\node[flowstep, below=0.55cm of u3] (u4)
+  {Kalman gain
+   $\bK=\bigl(\mathbf{P}_{hh}^{-1}\mathbf{P}_{gh}^\top\bigr)^\top$};
+\node[flowstep, below=0.55cm of u4] (u5)
+  {Innovation $\bm\delta_t=\mathbf{y}_k-\bar{\mathbf{y}}$,\quad
+   $\bm\varepsilon=\bK\bm\delta_t$};
+\node[flowstep, below=0.55cm of u5] (u6)
+  {State retraction:
+   $\bX_{k|k}=\bar{\mathbf{X}}_k\,\Exp(\bm\varepsilon)$};
+\node[flowstep, below=0.55cm of u6] (u7)
+  {Cov.\ update:
+   $\bP_{k|k}=\bP_{k|k-1}-\bK\mathbf{P}_{gh}^\top$, symmetrize};
+\node[start, below=0.55cm of u7] (u8) {Output $(\bX_{k|k},\bP_{k|k})$};
+% yes branch
+\draw[sarr] (check) -- node[right, font=\small]{yes} (u0);
+% skip branch: go right then down alongside the diagram
+\draw[sarr] (check.east) -- ++(1.2,0)
+  node[right, font=\small, lieaccent]{skip};
 \foreach \a/\b in {u0/u1,u1/u2,u2/u3,u3/u4,u4/u5,u5/u6,u6/u7,u7/u8}
   \draw[arr] (\a) -- (\b);
 \end{tikzpicture}
