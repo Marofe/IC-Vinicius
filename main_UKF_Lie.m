@@ -114,3 +114,4 @@ grid on
 %% save
 hx_ukf_lie=hx;
 save(['sol_ukf_lie_' trajectory '.mat'], 'hx_ukf_lie')
+save('ukf_full_workspace.mat')
