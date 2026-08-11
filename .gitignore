@@ -1,3 +1,6 @@
-ukf_full_workspace.mat
-main_UKF_Lie_profile.pdf
-sol_ukf_lie_rectangular.mat
+# WORKSPACE OUTPUTS & RUNTIME DATA
+Workspaces/
+
+# MATLAB CODER & MEX BUILD ARTIFACTS
+codegen/
+*.mex*
