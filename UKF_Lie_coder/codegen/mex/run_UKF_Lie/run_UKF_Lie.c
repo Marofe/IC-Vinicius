@@ -515,7 +515,7 @@ real_T run_UKF_Lie(run_UKF_LieStackData *SD, const emlrtStack *sp, real_T N,
                    const real_T Pqq[225], const real_T Prr[9],
                    const real_T u[1375632], real_T alpha, real_T beta,
                    real_T kappa, real_T L, const real_T Cen[9],
-                   const real_T y[687816], const real_T leverarm[3], real_T M,
+                   const real_T y[3408], const real_T leverarm[3], real_T M,
                    real_T euler[687816], const struct0_T *ref)
 {
   static const int32_T b_iv[2] = {1, 7};

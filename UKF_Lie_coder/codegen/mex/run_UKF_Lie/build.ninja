@@ -6,7 +6,7 @@ ninja_required_version = 1.3
 root = .
 builddir = $root/build/win64
 matlabdir = C:/Program Files/MATLAB/R2026a
-startdir = D:/codigos_ic/UKF_Lie_coder
+startdir = D:/codigos_ic/IC-Vinicius/UKF_Lie_coder
 
 # Toolchain information
 cc = C:\ProgramData\MATLAB\SupportPackages\R2026a\3P.instrset\mingw_w64.instrset\bin\gcc.exe
@@ -14,9 +14,9 @@ cxx = C:\ProgramData\MATLAB\SupportPackages\R2026a\3P.instrset\mingw_w64.instrse
 linker = C:\ProgramData\MATLAB\SupportPackages\R2026a\3P.instrset\mingw_w64.instrset\bin\gcc.exe
 linkerxx = C:\ProgramData\MATLAB\SupportPackages\R2026a\3P.instrset\mingw_w64.instrset\bin\g++.exe
 
-cflags =  -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I "D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie" -I "D:\codigos_ic\UKF_Lie_coder" -I "D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface" -I "C:\Program Files\MATLAB\R2026a\extern\include" -I "." -DHAVE_LAPACK_CONFIG_H -DLAPACK_COMPLEX_STRUCTURE -DMW_HAVE_LAPACK_DECLS -DMODEL=run_UKF_Lie_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp 
+cflags =  -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder\codegen\mex\run_UKF_Lie" -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder" -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface" -I "C:\Program Files\MATLAB\R2026a\extern\include" -I "." -DHAVE_LAPACK_CONFIG_H -DLAPACK_COMPLEX_STRUCTURE -DMW_HAVE_LAPACK_DECLS -DMODEL=run_UKF_Lie_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp 
 
-cxxflags =  -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c++11 -I "D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie" -I "D:\codigos_ic\UKF_Lie_coder" -I "D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface" -I "C:\Program Files\MATLAB\R2026a\extern\include" -I "." -DHAVE_LAPACK_CONFIG_H -DLAPACK_COMPLEX_STRUCTURE -DMW_HAVE_LAPACK_DECLS -DMODEL=run_UKF_Lie_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp 
+cxxflags =  -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c++11 -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder\codegen\mex\run_UKF_Lie" -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder" -I "D:\codigos_ic\IC-Vinicius\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface" -I "C:\Program Files\MATLAB\R2026a\extern\include" -I "." -DHAVE_LAPACK_CONFIG_H -DLAPACK_COMPLEX_STRUCTURE -DMW_HAVE_LAPACK_DECLS -DMODEL=run_UKF_Lie_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp 
 
 ldflags = run_UKF_Lie.def  -m64 -Wl,--no-undefined -shared -static -L"C:\Program Files\MATLAB\R2026a\extern\lib\win64\mingw64" -llibmx -llibmex -llibmat -lm -llibmwlapack -llibmwblas -o "run_UKF_Lie_mex.mexw64" -L"$matlabdir\extern\lib\win64\mingw64" -llibmwlapack -llibmwblas -llibemlrt -llibcovrt -llibut -llibmwmathutil -fopenmp
 

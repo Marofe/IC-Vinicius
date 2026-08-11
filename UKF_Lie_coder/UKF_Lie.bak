@@ -84,19 +84,19 @@
                   </Inputs>
                   <Inputs id="27" type="coderapp.internal.interface.project.Input">
                     <Name>y</Name>
-                    <Type id="21" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="28" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Inputs>
-                  <Inputs id="28" type="coderapp.internal.interface.project.Input">
+                  <Inputs id="29" type="coderapp.internal.interface.project.Input">
                     <Name>leverarm</Name>
-                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="30" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Inputs>
-                  <Inputs id="30" type="coderapp.internal.interface.project.Input">
+                  <Inputs id="31" type="coderapp.internal.interface.project.Input">
                     <Name>M</Name>
                     <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Inputs>
-                  <Inputs id="31" type="coderapp.internal.interface.project.Input">
+                  <Inputs id="32" type="coderapp.internal.interface.project.Input">
                     <Name>euler</Name>
-                    <Type id="32" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="28" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Inputs>
                   <Inputs id="33" type="coderapp.internal.interface.project.Input">
                     <Name>ref</Name>
@@ -130,7 +130,7 @@
                   <Size type="coderapp.internal.codertype.Dimension"/>
                   <Size type="coderapp.internal.codertype.Dimension"/>
                 </Types>
-                <Types id="29" type="coderapp.internal.codertype.PrimitiveType">
+                <Types id="30" type="coderapp.internal.codertype.PrimitiveType">
                   <ClassName>double</ClassName>
                   <Size type="coderapp.internal.codertype.Dimension">
                     <Length>3</Length>
@@ -172,21 +172,21 @@
                   </Fields>
                   <Fields id="46" type="coderapp.internal.codertype.Property">
                     <Name>ba</Name>
-                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="30" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Fields>
                   <Fields id="47" type="coderapp.internal.codertype.Property">
                     <Name>bg</Name>
-                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="30" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Fields>
                   <Fields id="48" type="coderapp.internal.codertype.Property">
                     <Name>leverarm</Name>
-                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                    <Type id="30" type="coderapp.internal.codertype.PrimitiveType"/>
                   </Fields>
                   <ClassName>struct</ClassName>
                   <Size type="coderapp.internal.codertype.Dimension"/>
                   <Size type="coderapp.internal.codertype.Dimension"/>
                 </Types>
-                <Types id="32" type="coderapp.internal.codertype.PrimitiveType">
+                <Types id="28" type="coderapp.internal.codertype.PrimitiveType">
                   <ClassName>double</ClassName>
                   <Size type="coderapp.internal.codertype.Dimension">
                     <Length>3</Length>
@@ -273,8 +273,8 @@
             <coderapp.internal.mlc.mfz.MatlabCoderProjectState id="1" type="coderapp.internal.mlc.mfz.MatlabCoderProjectState">
               <WorkflowTarget>MEX</WorkflowTarget>
               <Activity id="2" type="coderapp.internal.mlc.mfz.MainBuildActivity">
-                <Compile>NOT_PLANNED</Compile>
-                <Generate>FAIL</Generate>
+                <Compile>SUCCESS</Compile>
+                <Generate>SUCCESS</Generate>
                 <TargetHardware>MATLAB Host Computer</TargetHardware>
                 <TargetLanguage>C</TargetLanguage>
                 <Result id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult"/>
@@ -282,6 +282,7 @@
               <MainBuildResult id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult">
                 <LogDirectory>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie</LogDirectory>
                 <MainReport id="4" type="coderapp.internal.build.mfz.CodegenArtifact"/>
+                <OutputFile>D:\codigos_ic\UKF_Lie_coder\run_UKF_Lie_mex.mexw64</OutputFile>
                 <Artifacts id="4" type="coderapp.internal.build.mfz.CodegenArtifact">
                   <SubType>CODEGEN_REPORT</SubType>
                   <File type="coderapp.internal.util.mfz.FileSpec">
@@ -289,37 +290,478 @@
                   </File>
                   <Type>CODEGEN_REPORT</Type>
                 </Artifacts>
+                <Artifacts id="5" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <SubType>MEX</SubType>
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\run_UKF_Lie_mex.mexw64</Path>
+                  </File>
+                  <Type>BINARY</Type>
+                </Artifacts>
+                <Artifacts id="6" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\blas.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="7" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\emlrt.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="8" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\lapacke.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="9" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\lapacke_config.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="10" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\matrix.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="11" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\mex.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="12" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\include\tmwtypes.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="13" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>C:\Program Files\MATLAB\R2026a\extern\version\c_mexapi_version.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="14" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\SigmaPointsLie.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="15" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\SigmaPointsLie.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="16" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\anyNonFinite.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="17" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\anyNonFinite.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="18" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\chol.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="19" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\chol.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="20" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\cosd.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="21" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\cosd.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="22" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\diag.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="23" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\diag.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="24" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eig.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="25" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eig.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="26" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eml_int_forloop_overflow_error.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="27" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eml_int_forloop_overflow_error.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="28" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eml_mtimes_helper.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="29" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eml_mtimes_helper.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="30" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eulerENU2NED.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="31" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eulerENU2NED.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="32" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\evaluateStateRMSE.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="33" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\evaluateStateRMSE.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="34" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\exp_multiSE23T6.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="35" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\exp_multiSE23T6.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="36" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eye.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="37" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\eye.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="38" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\log_multiSE23T6.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="39" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\log_multiSE23T6.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="40" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\lu.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="41" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\lu.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="42" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mean.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="43" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mean.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="44" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mldivide.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="45" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mldivide.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="46" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mtimes.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="47" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\mtimes.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="48" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\norm.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="49" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\norm.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="50" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\prediction_UKF_Lie.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="51" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\prediction_UKF_Lie.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="52" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\rt_nonfinite.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="53" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\rt_nonfinite.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="54" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\rtwtypes.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="55" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="56" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="57" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_data.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="58" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_data.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="59" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_emxutil.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="60" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_emxutil.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="61" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_initialize.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="62" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_initialize.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="63" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_internal_types.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="64" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_mexutil.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="65" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_mexutil.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="66" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_terminate.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="67" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_terminate.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="68" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\run_UKF_Lie_types.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="69" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\sind.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="70" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\sind.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="71" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\squeeze.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="72" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\squeeze.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="73" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\sumMatrixIncludeNaN.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="74" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\sumMatrixIncludeNaN.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="75" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\warning.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="76" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\warning.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="77" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_api.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="78" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_api.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="79" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_info.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="80" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_info.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="81" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_mex.c</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
+                <Artifacts id="82" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\interface\_coder_run_UKF_Lie_mex.h</Path>
+                  </File>
+                  <Type>GENERATED_SOURCE</Type>
+                </Artifacts>
                 <BuildFolder type="coderapp.internal.util.mfz.FileSpec"/>
-                <Messages type="coderapp.internal.util.mfz.Message">
-                  <FileRange type="coderapp.internal.util.mfz.FileRange">
-                    <File type="coderapp.internal.util.mfz.FileSpec">
-                      <Path>D:\codigos_ic\IC-Vinicius\run_UKF_Lie.m</Path>
-                    </File>
-                    <Range type="coderapp.internal.util.mfz.Range">
-                      <End>650</End>
-                      <Start>540</Start>
-                    </Range>
-                  </FileRange>
-                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
-                  <Text>Function call failed.</Text>
-                  <Type>ERROR</Type>
-                </Messages>
-                <Messages type="coderapp.internal.util.mfz.Message">
-                  <FileRange type="coderapp.internal.util.mfz.FileRange">
-                    <File type="coderapp.internal.util.mfz.FileSpec">
-                      <Path>D:\codigos_ic\IC-Vinicius\inslib\Update_UKF_Lie.m</Path>
-                    </File>
-                    <Range type="coderapp.internal.util.mfz.Range">
-                      <End>1032</End>
-                      <Start>1020</Start>
-                    </Range>
-                  </FileRange>
-                  <Identifier>Coder:builtins:SizesIncompatibleForImplicitExpansion</Identifier>
-                  <Text>Unable to perform this operation because the sizes of the arrays are incompatible (size [6 x 1] and size [3 x 1]).
-Sizes in dimension 1 are incompatible (6 and 3).</Text>
-                  <Type>ERROR</Type>
-                </Messages>
-                <Timestamp>2026-08-10T20:18:11.701690</Timestamp>
+                <Success>true</Success>
+                <Timestamp>2026-08-11T14:39:31.658767</Timestamp>
               </MainBuildResult>
             </coderapp.internal.mlc.mfz.MatlabCoderProjectState>
           </MF0>

@@ -18,12 +18,12 @@ real_T b_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u,
                           const emlrtMsgIdentifier *parentId)
 {
   real_T y;
-  y = cb_emlrt_marshallIn(sp, emlrtAlias(u), parentId);
+  y = eb_emlrt_marshallIn(sp, emlrtAlias(u), parentId);
   emlrtDestroyArray(&u);
   return y;
 }
 
-real_T cb_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src,
+real_T eb_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src,
                            const emlrtMsgIdentifier *msgId)
 {
   static const int32_T dims = 0;

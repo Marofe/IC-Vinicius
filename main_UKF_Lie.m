@@ -80,7 +80,7 @@ euler(:,1)=eulerdFromRotm(Cen'*hx(1:3,1:3,1),'ZYX');
 %opt_j=4;
 %alpha_opt=alpha_range(opt_j)
 alpha_opt=0.0140
-[rmse_opt,hx,trP,euler] = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha_opt,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
+[rmse_opt,hx,trP,euler] = run_UKF_Lie_mex(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha_opt,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
 %% plot
 figure
 plot(trP)

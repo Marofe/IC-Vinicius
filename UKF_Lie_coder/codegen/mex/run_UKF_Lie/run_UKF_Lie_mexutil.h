@@ -24,7 +24,7 @@
 real_T b_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u,
                           const emlrtMsgIdentifier *parentId);
 
-real_T cb_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src,
+real_T eb_emlrt_marshallIn(const emlrtStack *sp, const mxArray *src,
                            const emlrtMsgIdentifier *msgId);
 
 real_T emlrt_marshallIn(const emlrtStack *sp,
