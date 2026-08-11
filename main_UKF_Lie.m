@@ -113,5 +113,5 @@ grid on
 [rmse_,rmse_ang,rmse_pos,rmse_vel]=evaluateStateRMSE(euler,squeeze(hx(1:3,5,:)),squeeze(hx(1:3,4,:)),ref,Cen)
 %% save
 hx_ukf_lie=hx;
-save(['../sol_ukf_lie_' trajectory '.mat'], '../hx_ukf_lie')
+save(['../sol_ukf_lie_' trajectory '.mat'], 'hx_ukf_lie')
 save('../ukf_full_workspace.mat');

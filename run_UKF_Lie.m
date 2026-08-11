@@ -1,4 +1,4 @@
-function [rmse,hx,trP,euler] = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref)
+function [rmse,hx,trP,euler] = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref) %#codegen
 nk=2;
 CenT=Cen';          % pre-transpose once (reused N times in loop)
 log_interval=round(N/10);

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<coderProject client="MatlabCoder" containerVersion="1" createdBy="R2026a" modifiedBy="R2026a">
+  <layers>
+    <layer id="core" version="R2025a">
+      <parts>
+        <part role="testRepository">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2026a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2026a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.core.mfz.TestRepositoryState id="1" type="coderapp.internal.core.mfz.TestRepositoryState">
+              <Tests type="coderapp.internal.core.mfz.TestSpec">
+                <Type>FILE</Type>
+                <Value>D:\codigos_ic\IC-Vinicius\main_UKF_Lie.m</Value>
+              </Tests>
+            </coderapp.internal.core.mfz.TestRepositoryState>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+    <layer id="interface" version="R2026a">
+      <parts>
+        <part role="mainInterface">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2026a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2026a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.interface.project.Interface id="1" type="coderapp.internal.interface.project.Interface">
+              <EntryPoints id="2" type="coderapp.internal.interface.project.EntryPointFunction">
+                <File type="coderapp.internal.util.mfz.FileSpec">
+                  <Path>../IC-Vinicius/run_UKF_Lie.m</Path>
+                </File>
+                <Name>run_UKF_Lie</Name>
+                <Signatures id="3" type="coderapp.internal.interface.project.FunctionSignature">
+                  <Inputs id="4" type="coderapp.internal.interface.project.Input">
+                    <Name>N</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="6" type="coderapp.internal.interface.project.Input">
+                    <Name>time</Name>
+                    <Type id="7" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="8" type="coderapp.internal.interface.project.Input">
+                    <Name>gps_time</Name>
+                    <Type id="9" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="10" type="coderapp.internal.interface.project.Input">
+                    <Name>hx</Name>
+                    <Type id="11" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="12" type="coderapp.internal.interface.project.Input">
+                    <Name>trP</Name>
+                    <Type id="13" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="14" type="coderapp.internal.interface.project.Input">
+                    <Name>P</Name>
+                    <Type id="15" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="16" type="coderapp.internal.interface.project.Input">
+                    <Name>Pqq</Name>
+                    <Type id="17" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="18" type="coderapp.internal.interface.project.Input">
+                    <Name>Prr</Name>
+                    <Type id="19" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="20" type="coderapp.internal.interface.project.Input">
+                    <Name>u</Name>
+                    <Type id="21" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="22" type="coderapp.internal.interface.project.Input">
+                    <Name>alpha</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="23" type="coderapp.internal.interface.project.Input">
+                    <Name>beta</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="24" type="coderapp.internal.interface.project.Input">
+                    <Name>kappa</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="25" type="coderapp.internal.interface.project.Input">
+                    <Name>L</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="26" type="coderapp.internal.interface.project.Input">
+                    <Name>Cen</Name>
+                    <Type id="19" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="27" type="coderapp.internal.interface.project.Input">
+                    <Name>y</Name>
+                    <Type id="21" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="28" type="coderapp.internal.interface.project.Input">
+                    <Name>leverarm</Name>
+                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="30" type="coderapp.internal.interface.project.Input">
+                    <Name>M</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="31" type="coderapp.internal.interface.project.Input">
+                    <Name>euler</Name>
+                    <Type id="32" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Inputs>
+                  <Inputs id="33" type="coderapp.internal.interface.project.Input">
+                    <Name>ref</Name>
+                    <Type id="34" type="coderapp.internal.codertype.StructType"/>
+                  </Inputs>
+                  <NumOutputs>4</NumOutputs>
+                </Signatures>
+              </EntryPoints>
+              <SizeConstraints id="35" type="coderapp.internal.interface.project.SizeConstraints">
+                <Value type="coderapp.internal.interface.project.SizeConstraintsValue"/>
+              </SizeConstraints>
+              <Types id="36" type="coderapp.internal.codertype.TypeStore">
+                <Types id="7" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="37" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                </Types>
+                <Types id="5" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="29" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="34" type="coderapp.internal.codertype.StructType">
+                  <Fields id="38" type="coderapp.internal.codertype.Property">
+                    <Name>time</Name>
+                    <Type id="7" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="39" type="coderapp.internal.codertype.Property">
+                    <Name>pe</Name>
+                    <Type id="37" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="40" type="coderapp.internal.codertype.Property">
+                    <Name>fib</Name>
+                    <Type id="37" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="41" type="coderapp.internal.codertype.Property">
+                    <Name>wib</Name>
+                    <Type id="37" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="42" type="coderapp.internal.codertype.Property">
+                    <Name>euler</Name>
+                    <Type id="37" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="43" type="coderapp.internal.codertype.Property">
+                    <Name>g0</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="44" type="coderapp.internal.codertype.Property">
+                    <Name>dt</Name>
+                    <Type id="5" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="45" type="coderapp.internal.codertype.Property">
+                    <Name>ve</Name>
+                    <Type id="37" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="46" type="coderapp.internal.codertype.Property">
+                    <Name>ba</Name>
+                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="47" type="coderapp.internal.codertype.Property">
+                    <Name>bg</Name>
+                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <Fields id="48" type="coderapp.internal.codertype.Property">
+                    <Name>leverarm</Name>
+                    <Type id="29" type="coderapp.internal.codertype.PrimitiveType"/>
+                  </Fields>
+                  <ClassName>struct</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+                <Types id="32" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                </Types>
+                <Types id="21" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>6</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                </Types>
+                <Types id="19" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>3</Length>
+                  </Size>
+                </Types>
+                <Types id="17" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>15</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>15</Length>
+                  </Size>
+                </Types>
+                <Types id="15" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>15</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>15</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                </Types>
+                <Types id="13" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                </Types>
+                <Types id="11" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>13</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>13</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>229272</Length>
+                  </Size>
+                </Types>
+                <Types id="9" type="coderapp.internal.codertype.PrimitiveType">
+                  <ClassName>double</ClassName>
+                  <Size type="coderapp.internal.codertype.Dimension">
+                    <Length>1136</Length>
+                  </Size>
+                  <Size type="coderapp.internal.codertype.Dimension"/>
+                </Types>
+              </Types>
+            </coderapp.internal.interface.project.Interface>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+    <layer id="matlabCoder" version="R2026a">
+      <parts>
+        <part role="matlabCoder">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2026a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2026a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.mlc.mfz.MatlabCoderProjectState id="1" type="coderapp.internal.mlc.mfz.MatlabCoderProjectState">
+              <WorkflowTarget>MEX</WorkflowTarget>
+              <Activity id="2" type="coderapp.internal.mlc.mfz.MainBuildActivity">
+                <Compile>NOT_PLANNED</Compile>
+                <Generate>FAIL</Generate>
+                <TargetHardware>MATLAB Host Computer</TargetHardware>
+                <TargetLanguage>C</TargetLanguage>
+                <Result id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult"/>
+              </Activity>
+              <MainBuildResult id="3" type="coderapp.internal.mlc.mfz.MatlabCoderCodegenResult">
+                <LogDirectory>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie</LogDirectory>
+                <MainReport id="4" type="coderapp.internal.build.mfz.CodegenArtifact"/>
+                <Artifacts id="4" type="coderapp.internal.build.mfz.CodegenArtifact">
+                  <SubType>CODEGEN_REPORT</SubType>
+                  <File type="coderapp.internal.util.mfz.FileSpec">
+                    <Path>D:\codigos_ic\UKF_Lie_coder\codegen\mex\run_UKF_Lie\html\report.mldatx</Path>
+                  </File>
+                  <Type>CODEGEN_REPORT</Type>
+                </Artifacts>
+                <BuildFolder type="coderapp.internal.util.mfz.FileSpec"/>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>D:\codigos_ic\IC-Vinicius\run_UKF_Lie.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>650</End>
+                      <Start>540</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:FunctionCallFailed</Identifier>
+                  <Text>Function call failed.</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Messages type="coderapp.internal.util.mfz.Message">
+                  <FileRange type="coderapp.internal.util.mfz.FileRange">
+                    <File type="coderapp.internal.util.mfz.FileSpec">
+                      <Path>D:\codigos_ic\IC-Vinicius\inslib\Update_UKF_Lie.m</Path>
+                    </File>
+                    <Range type="coderapp.internal.util.mfz.Range">
+                      <End>1032</End>
+                      <Start>1020</Start>
+                    </Range>
+                  </FileRange>
+                  <Identifier>Coder:builtins:SizesIncompatibleForImplicitExpansion</Identifier>
+                  <Text>Unable to perform this operation because the sizes of the arrays are incompatible (size [6 x 1] and size [3 x 1]).
+Sizes in dimension 1 are incompatible (6 and 3).</Text>
+                  <Type>ERROR</Type>
+                </Messages>
+                <Timestamp>2026-08-10T20:18:11.701690</Timestamp>
+              </MainBuildResult>
+            </coderapp.internal.mlc.mfz.MatlabCoderProjectState>
+          </MF0>
+        </part>
+        <part role="standaloneConfig">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2026a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2026a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.ext.ConfigStore id="1" type="coderapp.internal.ext.ConfigStore"/>
+          </MF0>
+        </part>
+        <part role="mexConfig">
+          <MF0 packageUris="http://schema.mathworks.com/mf0/coderapp_config_datamodel/R2021a.001 http://schema.mathworks.com/mf0/coderapp_core_proj_dm/R2025a http://schema.mathworks.com/mf0/coderapp_core_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_form_datamodel/R2020a http://schema.mathworks.com/mf0/coderapp_matlabcoder_proj_dm/R2026a http://schema.mathworks.com/mf0/coderapp_matlabcoder_rt_dm/R2022b http://schema.mathworks.com/mf0/coderapp_types_project_datamodel/R2026a http://schema.mathworks.com/mf0/coderapp_types_runtime_datamodel/R2022b http://schema.mathworks.com/mf0/coderapp_utils_datamodel/R2020a" version="1.1">
+            <coderapp.internal.ext.ConfigStore id="1" type="coderapp.internal.ext.ConfigStore"/>
+          </MF0>
+        </part>
+      </parts>
+    </layer>
+  </layers>
+</coderProject>
