@@ -80,6 +80,29 @@ euler(:,1)=eulerdFromRotm(Cen'*hx(1:3,1:3,1),'ZYX');
 %opt_j=4;
 %alpha_opt=alpha_range(opt_j)
 alpha_opt=0.0140
+
+% Re-compiles run_UKF_Lie_mex if missing or if run_UKF_Lie.m was modified
+sourceFile = which('run_UKF_Lie.m');
+mexFile = which(['run_UKF_Lie_mex', '.', mexext]);
+
+needsRebuild = false;
+
+if isempty(mexFile)
+    disp('MEX binary not found. Generating MEX...');
+    needsRebuild = true;
+else
+    sourceInfo = dir(sourceFile);
+    mexInfo = dir(mexFile);
+    if sourceInfo.datenum > mexInfo.datenum
+        disp('run_UKF_Lie.m modified since last build. Rebuilding MEX...');
+        needsRebuild = true;
+    end
+end
+
+if needsRebuild
+    build_mex;
+end
+
 [rmse_opt,hx,trP,euler] = run_UKF_Lie_mex(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha_opt,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
 %% plot
 figure
