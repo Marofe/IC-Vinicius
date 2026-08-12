@@ -1,4 +1,4 @@
-function [rmse,hx,trP,euler] = run_hybrid_EKF_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref)
+function [rmse,hx,trP,euler] = run_EuKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref)
 nk=2;
 CenT=Cen';          
 log_interval=round(N/10);
@@ -20,7 +20,7 @@ for k=1:N-1
         
         % Call the new hybrid update function.
         % CRITICAL: We pass hx_pred and P_pred. We NO LONGER pass G, R, or Pqq!
-        [hx(:,:,k+1), P(:,:,k+1)] = update_Hybrid_UKF_Lie(hx_pred, P_pred, Prr, y(:,nk), alpha, beta, kappa, leverarm, L);
+        [hx(:,:,k+1), P(:,:,k+1)] = update_hybrid_UKF_Lie(hx_pred, P_pred, Prr, y(:,nk), alpha, beta, kappa, leverarm, L);
             
         if nk<M 
             nk=nk+1;

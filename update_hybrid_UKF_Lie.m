@@ -1,4 +1,4 @@
-function [hx_upd, P_upd] = Update_Hybrid_UKF_Lie(hx_pred, P_pred, Prr, y_meas, alpha, beta, kappa, leverarm, L)
+function [hx_upd, P_upd] = update_hybrid_UKF_Lie(hx_pred, P_pred, Prr, y_meas, alpha, beta, kappa, leverarm, L)
 % Update_Hybrid_UKF_Lie
 % Executes the UKF measurement update step for the Hybrid EKF/UKF-Lie filter.
 % It numerically infers the Jacobian using the Unscented Transform.

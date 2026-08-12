@@ -68,20 +68,7 @@ P(:,:,1)=diag([1e-6,1e-6,1e-6,...%roll/pitch/yaw
     1e-6,1e-6,1e-6,... %ba1/ba2/ba3
     1e-9,1e-9,1e-9     %bg1/bg2/bg3
     ]);
-%% processing
-euler(:,1)=eulerdFromRotm(Cen'*hx(1:3,1:3,1),'ZYX');
-% alpha_range=linspace(1e-4,5e-2,10);
-% rmse=zeros(numel(alpha_range),1);
-% parfor j=1:numel(alpha_range)
-%     alpha=alpha_range(j)
-%     rmse(j) = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
-% end
-% [~,opt_j]=min(rmse);
-%opt_j=4;
-%alpha_opt=alpha_range(opt_j)
-alpha_opt=0.0140
-
-% Re-compiles run_UKF_Lie_mex if missing or if run_UKF_Lie.m was modified
+%% Re-compiles run_UKF_Lie_mex if missing or if run_UKF_Lie.m was modified
 sourceFile = which('run_UKF_Lie.m');
 mexFile = which(['run_UKF_Lie_mex', '.', mexext]);
 
@@ -100,10 +87,33 @@ else
 end
 
 if needsRebuild
-    build_mex;
+    build_run_UKF_Lie_mex;
+else    
+    disp('MEX file is up-to-date and ready')
 end
 
-[rmse_opt,hx,trP,euler] = run_UKF_Lie_mex(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha_opt,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
+%% processing
+euler(:,1)=eulerdFromRotm(Cen'*hx(1:3,1:3,1),'ZYX');
+% alpha_range=linspace(1e-4,5e-2,10);
+% rmse=zeros(numel(alpha_range),1);
+% parfor j=1:numel(alpha_range)
+%     alpha=alpha_range(j)
+%     rmse(j) = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref);
+% end
+% [~,opt_j]=min(rmse);
+%opt_j=4;
+%alpha_opt=alpha_range(opt_j)
+alpha_opt=0.0140
+
+% --- BENCHMARK FILTER EXECUTION ---
+tic;
+[rmse_opt, hx, trP, euler] = run_UKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
+ukfTime = toc;
+
+fprintf('\n======================================================\n');
+fprintf('UKF-Lie MEX Execution Time: %.4f seconds\n', ukfTime);
+fprintf('======================================================\n\n');
+
 %% plot
 figure
 plot(trP)

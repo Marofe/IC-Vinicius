@@ -1,5 +1,4 @@
-% build_hybrid_mex.m
-% Variable-dimension build script for run_hybrid_EKF_UKF_Lie MEX compilation
+% Variable-dimension build script for run_UKF_Lie MEX compilation
 
 clear functions; % Release compiled MEX from memory before rebuilding
 
@@ -79,6 +78,6 @@ args = { ...
 % -------------------------------------------------------------------------
 % 5. Execute Code Generation
 % -------------------------------------------------------------------------
-disp('Compiling run_hybrid_EKF_UKF_Lie to MEX (Variable Length Support)...');
-codegen -config cfg run_hybrid_EKF_UKF_Lie -args args;
+disp('Compiling run_UKF_Lie to MEX (Variable Length Support)...');
+codegen -config cfg run_UKF_Lie -args args;
 disp('MEX compilation completed!');
