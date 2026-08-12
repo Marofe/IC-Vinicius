@@ -20,7 +20,7 @@ for k=1:N-1
         
         % Call the new hybrid update function.
         % CRITICAL: We pass hx_pred and P_pred. We NO LONGER pass G, R, or Pqq!
-        [hx(:,:,k+1), P(:,:,k+1)] = update_hybrid_UKF_Lie(hx_pred, P_pred, Prr, y(:,nk), alpha, beta, kappa, leverarm, L);
+        [hx(:,:,k+1), P(:,:,k+1)] = update_EuKF_Lie(hx_pred, P_pred, Prr, y(:,nk), alpha, beta, kappa, leverarm, L);
             
         if nk<M 
             nk=nk+1;
@@ -33,7 +33,7 @@ for k=1:N-1
     euler(:,k+1)=eulerdFromRotm(CenT*hx(1:3,1:3,k+1));
     
     if ~mod(k,log_interval)
-        fprintf('running the Hybrid EKF/UKF-Lie... %.1f%%\n', 100*k/N);
+        fprintf('running the EuKF-Lie... %.1f%%\n', 100*k/N);
     end
 end
 rmse=evaluateStateRMSE(euler,squeeze(hx(1:3,5,:)),squeeze(hx(1:3,4,:)),ref,Cen);
