@@ -1,6 +1,5 @@
 close all
 clear all
-clc
 %% add library
 addLibrary('inslib')
 %% load dataset
@@ -105,14 +104,18 @@ euler(:,1)=eulerdFromRotm(Cen'*hx(1:3,1:3,1),'ZYX');
 %alpha_opt=alpha_range(opt_j)
 alpha_opt=0.0140
 
-% --- BENCHMARK FILTER EXECUTION ---
+% --- FILTER EXECUTION ---
+profile clear;               % Clears timing data from previous runs
+profile on -detail builtin;  % Starts tracking CPU time for the filter
 tic;
+% Use native 'run_UKF_Lie' for line-by-line math breakdown
+% Use mex version 'run_UKF_Lie_mex' for total C execution time
 [rmse_opt, hx, trP, euler] = run_UKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
-ukfTime = toc;
+profile off;                 % Stop tracking before plotting starts
+profile viewer;              % Automatically open the profiler report window
+ukfTime = toc; % tic/toc measures wall-clock time, so the number of CPU threads used will change this even if the timed function is the same
 
-fprintf('\n======================================================\n');
 fprintf('UKF-Lie MEX Execution Time: %.4f seconds\n', ukfTime);
-fprintf('======================================================\n\n');
 
 %% plot
 figure
@@ -146,5 +149,13 @@ grid on
 [rmse_,rmse_ang,rmse_pos,rmse_vel]=evaluateStateRMSE(euler,squeeze(hx(1:3,5,:)),squeeze(hx(1:3,4,:)),ref,Cen)
 %% save
 hx_ukf_lie = hx;
+% Define output directory relative to where this script lives
+scriptFolder = fileparts(mfilename('fullpath')); 
+targetFolder = fullfile(scriptFolder, 'Workspaces');
+
+% Create directory if it doesn't exist
+if ~exist(targetFolder, 'dir')
+    mkdir(targetFolder);
+end
 save(['Workspaces/sol_ukf_lie_' trajectory '.mat'], 'hx_ukf_lie');
 save(['Workspaces/ukf_full_' trajectory '_workspace.mat']);
