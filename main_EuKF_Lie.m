@@ -136,7 +136,7 @@ title('Gyro bias')
 grid on
 
 %% RMSE
-[rmse_, rmse_ang, rmse_pos, rmse_vel] = evaluateStateRMSE(euler, squeeze(hx(1:3,5,:)), squeeze(hx(1:3,4,:)), ref, Cen);
+[rmse_, rmse_ang, rmse_pos, rmse_vel] = evaluateStateRMSE(euler, squeeze(hx(1:3,5,:)), squeeze(hx(1:3,4,:)), ref, Cen)
 
 %% save
 hx_EuKF_lie = hx;
