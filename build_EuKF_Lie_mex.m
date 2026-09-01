@@ -1,4 +1,4 @@
-% Variable-dimension build script for run_EuKF MEX compilation
+% Variable-dimension build script for run_EuKF_Lie MEX compilation
 
 clear functions; % Release compiled MEX from memory before rebuilding
 
@@ -50,7 +50,7 @@ t_ref = coder.typeof(refSample);
 
 % -------------------------------------------------------------------------
 % 4. Assemble Positional Input Arguments Cell Array
-% Matches: function [...] = run_UKF_Lie(N, time, gps_time, hx, trP, P, ...
+% Matches: function [...] = run_EuKF_Lie(N, time, gps_time, hx, trP, P, ...
 %            Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler, ref)
 % -------------------------------------------------------------------------
 args = { ...

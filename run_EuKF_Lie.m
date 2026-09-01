@@ -1,4 +1,7 @@
-function [rmse,hx,trP,euler] = run_EuKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref)
+function [rmse,hx,trP,euler] = run_EuKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref) %#codegen
+% RUN_EUKF_LIE
+% Executes the hybrid EKF-Prediction / UKF-Update on Lie Groups (EuKF-Lie).
+
 nk=2;
 CenT=Cen';          
 log_interval=round(N/10);
@@ -18,8 +21,8 @@ for k=1:N-1
     % Check if a GNSS measurement has arrived
     if (abs(time(k+1)-gps_time(nk)) < dt)
         
-        % Call the new hybrid update function.
-        % CRITICAL: We pass hx_pred and P_pred. We NO LONGER pass G, R, or Pqq!
+        % Call the hybrid update function.
+        % We pass hx_pred and P_pred.
         [hx(:,:,k+1), P(:,:,k+1)] = update_EuKF_Lie(hx_pred, P_pred, Prr, y(:,nk), alpha, beta, kappa, leverarm, L);
             
         if nk<M 

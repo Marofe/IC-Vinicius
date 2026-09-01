@@ -1,14 +1,7 @@
-function [g,Pt]=Update_UKF_Lie(g0,Pt0,Pqq,Prr,y,G,R,alpha,beta,kappa,lb,L)
-%% lembretes
-% a medida é Y=h(X)EXP(ruido)  com Y=[I p_gps;0 1] Y é do tipo T(3)
+function [g,Pt] = update_UKF_Lie(g0,Pt0,Pqq,Prr,y,G,R,alpha,beta,kappa,lb,L)
+% UPDATE_UKF_LIE
+% Executes the UKF measurement update step on Lie Groups.
 
-% fazer log_v(inv(Y1)*Y2) = p2 - p1
-
-% Se Y1=[I p1;0 1] e Y2=[I p2;0 1] ==> Y1*Y2 = [I (p1+p2);0 1];
-
-% H=h(G)*exp^(R); Se G=[Ceb v p,0 I] ==> h(G)=[I p+Ceb*lb;0 1]; expH^(R)=[I R,0 1] 
-
-% h(G)*expH^(R)= [I p+Ceb*lb + R;0 1]=[I p+Ceb*lb;0 1]*[I R;0 1]
 %% 
 lambda=(alpha^2)*(L+kappa)-L;
 %% pesos

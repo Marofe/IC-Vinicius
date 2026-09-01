@@ -1,12 +1,12 @@
-function [hx_upd, P_upd] = update_EuKF_Lie(hx_pred, P_pred, Prr, y_meas, alpha, beta, kappa, leverarm, L)
-% Update_Hybrid_UKF_Lie
+function [hx_upd, P_upd] = update_EuKF_Lie(hx_pred, P_pred, Prr, y_meas, alpha, beta, kappa, leverarm, ~) %#codegen
+% UPDATE_EUKF_LIE
 % Executes the UKF measurement update step for the Hybrid EKF/UKF-Lie filter.
 % It numerically infers the Jacobian using the Unscented Transform.
 
 %% 1. Generate Local Sigma Points (State Only)
-% OVERRIDE: Infer the true Lie algebra dimension directly from the covariance matrix
+% Infer the true Lie algebra dimension directly from the covariance matrix
 L = size(P_pred, 1);
-% We do not need Q or R here, only the state covariance P_pred[cite: 1].
+% We do not need Q or R here, only the state covariance P_pred.
 lambda = alpha^2 * (L + kappa) - L;
 
 % Compute Weights for mean and covariance

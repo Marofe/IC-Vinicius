@@ -62,9 +62,9 @@ bg0 = zeros(3,1);
 hx(:,:,1) = blkdiag([Ceb_0 v0 p0; zeros(2,3) eye(2)], [eye(3) ba0; zeros(1,3) 1], [eye(3) bg0; zeros(1,3) 1]);
 P(:,:,1) = diag([1e-6, 1e-6, 1e-6, 1e-9, 1e-9, 1e-9, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-9, 1e-9, 1e-9]);
 
-%% Re-compiles run_EuKF_Lie_mex if missing or if run_EuKF_Lie.m was modified
-sourceFile = which('run_EuKF_Lie.m');
-mexFile = which(['run_EuKF_Lie_mex', '.', mexext]);
+%% Re-compiles run_SPUKF_Lie_mex if missing or if run_SPUKF_Lie.m was modified
+sourceFile = which('run_SPUKF_Lie.m');
+mexFile = which(['run_SPUKF_Lie_mex', '.', mexext]);
 needsRebuild = false;
 
 if isempty(mexFile)
@@ -74,13 +74,13 @@ else
     sourceInfo = dir(sourceFile);
     mexInfo = dir(mexFile);
     if sourceInfo.datenum > mexInfo.datenum
-        disp('run_EuKF_Lie.m modified since last build. Rebuilding MEX...');
+        disp('run_SPUKF_Lie.m modified since last build. Rebuilding MEX...');
         needsRebuild = true;
     end
 end
 
 if needsRebuild
-    build_EuKF_Lie_mex;
+    build_SPUKF_Lie_mex;
 else    
     disp('MEX file is up-to-date and ready');
 end
@@ -93,14 +93,14 @@ alpha_opt = 0.0140;
 profile clear;               % Clears timing data from previous runs
 profile on -detail builtin;  % Starts tracking CPU time for the filter
 tic;
-% Use native 'run_EuKF_Lie' for line-by-line math breakdown
-% Use mex version 'run_EuKF_Lie_mex' for total C execution time
-[rmse_opt, hx, trP, euler] = run_EuKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
+% Use native 'run_SPUKF_Lie' for line-by-line math breakdown
+% Use mex version 'run_SPUKF_Lie_mex' for total C execution time
+[rmse_opt, hx, trP, euler] = run_SPUKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
 profile off;                 % Stop tracking before plotting starts
 profile viewer;              % Automatically open the profiler report window
-eukfTime = toc; % tic/toc measures wall-clock time, so the number of CPU threads used will change this even if the timed function is the same
+optUkfTime = toc;
 
-fprintf('EuKF-Lie MEX Execution Time: %.4f seconds\n', eukfTime);
+fprintf('SPUKF-Lie MEX Execution Time: %.4f seconds\n', optUkfTime);
 
 %% plot
 figure
@@ -139,14 +139,12 @@ grid on
 [rmse_, rmse_ang, rmse_pos, rmse_vel] = evaluateStateRMSE(euler, squeeze(hx(1:3,5,:)), squeeze(hx(1:3,4,:)), ref, Cen)
 
 %% save
-hx_EuKF_lie = hx;
-% Define output directory relative to where this script lives
+hx_SPUKF_lie = hx;
 scriptFolder = fileparts(mfilename('fullpath')); 
 targetFolder = fullfile(scriptFolder, 'Workspaces');
 
-% Create directory if it doesn't exist
 if ~exist(targetFolder, 'dir')
     mkdir(targetFolder);
 end
-save(['Workspaces/sol_EuKF_lie_' trajectory '.mat'], 'hx_EuKF_lie');
-save(['Workspaces/full_EuKF_lie_' trajectory '_workspace.mat']);
+save(['Workspaces/sol_SPUKF_lie_' trajectory '.mat'], 'hx_SPUKF_lie');
+save(['Workspaces/full_SPUKF_lie_' trajectory '_workspace.mat']);
