@@ -95,7 +95,7 @@ profile on -detail builtin;  % Starts tracking CPU time for the filter
 tic;
 % Use native 'run_EnKF_Lie' for line-by-line math breakdown
 % Use mex version 'run_EnKF_Lie_mex' for total C execution time
-[rmse_opt, hx, trP, euler] = run_EnKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
+[rmse_opt, hx, trP, euler] = run_EnKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
 profile off;                 % Stop tracking before plotting starts
 profile viewer;              % Automatically open the profiler report window
 enkfTime = toc;
