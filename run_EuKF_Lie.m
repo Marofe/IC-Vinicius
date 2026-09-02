@@ -1,6 +1,9 @@
 function [rmse,hx,trP,euler] = run_EuKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref) %#codegen
 % RUN_EUKF_LIE
 % Executes the hybrid EKF-Prediction / UKF-Update on Lie Groups (EuKF-Lie).
+% NOTE: This filter is mathematically equivalent to SPUKF-Lie (Single Propagation
+% Unscented Kalman Filter on Lie Groups) as described by Biswas et al. (2016) and
+% Brossard et al. (2018). See run_SPUKF_Lie.m.
 
 nk=2;
 CenT=Cen';          

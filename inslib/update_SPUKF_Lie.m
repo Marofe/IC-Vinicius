@@ -1,66 +1,75 @@
-function [hx_upd, P_upd, G_upd] = update_SPUKF_Lie(hx_pred, P_pred, G_ensemble, Wm, Wc, Prr, y_meas, leverarm, L) %#codegen
+function [hx_upd, P_upd] = update_SPUKF_Lie(hx_pred, P_pred, Prr, y_meas, alpha, beta, kappa, leverarm, L) %#codegen
 % UPDATE_SPUKF_LIE
-% Executes the measurement update for the Single Propagation UKF on Lie Groups (SPUKF-Lie).
-% Uses the propagated ensemble G_ensemble directly to compute measurement statistics
-% and updates both the mean/covariance and each ensemble member via Kalman Gain.
+% Executes the UKF measurement update step for the Single Propagation UKF on Lie Groups (SPUKF-Lie).
+% As formulated in Biswas et al. (2016) and Brossard et al. (2018), local sigma points are generated 
+% from the predicted covariance P_pred at each measurement epoch to compute the Kalman gain without Jacobians.
 
-%% 1. Map Ensemble to Measurement Space
-n_pts = 2*L + 1;
-Y = zeros(3, n_pts);
+%% 1. Generate Local Sigma Points (State Only)
+L = size(P_pred, 1);
+lambda = alpha^2 * (L + kappa) - L;
 
-for i = 1:n_pts
-    % Extract rotation matrix and position from each ensemble member
-    Ceb_i = G_ensemble(1:3, 1:3, i);
-    peb_i = G_ensemble(1:3, 5, i);
-    
-    % GNSS measurement model with lever arm: y = p + Ceb * leverarm
-    Y(:, i) = peb_i + Ceb_i * leverarm;
+% Compute Weights for mean and covariance
+Wm = zeros(2*L+1, 1);
+Wc = zeros(2*L+1, 1);
+Wm(1) = lambda / (L + lambda);
+Wc(1) = lambda / (L + lambda) + (1 - alpha^2 + beta);
+Wm(2:end) = 1 / (2 * (L + lambda));
+Wc(2:end) = 1 / (2 * (L + lambda));
+
+% Enforce symmetry to prevent Cholesky from crashing due to float errors
+P_pred = (P_pred + P_pred') / 2;
+
+% Cholesky decomposition
+S = chol((L + lambda) * P_pred, 'lower');
+
+% Generate the Lie Algebra error sigma points
+xi = zeros(L, 2*L+1);
+for i = 1:L
+    xi(:, i+1)   =  S(:, i);
+    xi(:, i+L+1) = -S(:, i);
 end
 
-%% 2. Compute Measurement Statistics
-% Mean predicted measurement
+%% 2. Map to Manifold and Predict Measurements
+Y = zeros(3, 2*L+1);
+
+for i = 1:(2*L+1)
+    % Wrap the flat error sigma point onto the Lie group manifold
+    hx_i = hx_pred * exp_multiSE23T6(xi(:, i));
+
+    % Extract Rotation and Position
+    Ceb_i = hx_i(1:3, 1:3);
+    p_i   = hx_i(1:3, 5);
+
+    % Map to GNSS measurement space (ECEF Position with Lever Arm)
+    Y(:, i) = p_i + Ceb_i * leverarm;
+end
+
+%% 3. Compute Mean Measurement & Innovation Statistics
 y_bar = zeros(3, 1);
-for i = 1:n_pts
+for i = 1:(2*L+1)
     y_bar = y_bar + Wm(i) * Y(:, i);
 end
 
-% Compute Lie algebra error for each member relative to the predicted mean state
-p_dim = 15;
-xi = zeros(p_dim, n_pts);
-[Lg, Ug, Pg] = lu(hx_pred);
-for i = 1:n_pts
-    xi(:, i) = log_multiSE23T6(Ug\(Lg\(Pg*G_ensemble(:,:,i))));
+% Measurement Innovation Covariance (P_hh / S) and Cross-Covariance (P_gh)
+P_hh = Prr; % Initialize with measurement noise covariance
+P_gh = zeros(L, 3);
+
+for i = 1:(2*L+1)
+    y_diff = Y(:, i) - y_bar;
+    P_hh = P_hh + Wc(i) * (y_diff * y_diff');
+    P_gh = P_gh + Wc(i) * (xi(:, i) * y_diff');
 end
 
-% Innovation covariance and cross-covariance
-P_hh = Prr;
-P_gh = zeros(p_dim, 3);
-for i = 1:n_pts
-    dy = Y(:, i) - y_bar;
-    P_hh = P_hh + Wc(i) * (dy * dy');
-    P_gh = P_gh + Wc(i) * (xi(:, i) * dy');
-end
+%% 4. Kalman Gain & Correction
+K = P_gh / P_hh; % (L x 3)
 
-%% 3. Compute Kalman Gain and Update Mean State & Covariance
-K = P_gh / P_hh; % (15x3)
-
-% Innovation for the mean
+% Innovation vector
 innovation = y_meas - y_bar;
 
-% Update mean state on the Lie group manifold
-delta_x = K * innovation;
-hx_upd = hx_pred * exp_multiSE23T6(delta_x);
+% Update State on Lie Group Manifold
+hx_upd = hx_pred * exp_multiSE23T6(K * innovation);
 
-% Update covariance
+% Update Covariance Matrix (Joseph form approximation / standard form)
 P_upd = P_pred - K * P_gh';
-P_upd = (P_upd + P_upd') / 2;
-
-%% 4. Update Ensemble Members
-G_upd = zeros(13, 13, n_pts);
-for i = 1:n_pts
-    inn_i = y_meas - Y(:, i);
-    delta_i = K * inn_i;
-    G_upd(:,:,i) = G_ensemble(:,:,i) * exp_multiSE23T6(delta_i);
-end
-
+P_upd = (P_upd + P_upd') / 2; % Force symmetry
 end
