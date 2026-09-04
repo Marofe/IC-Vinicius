@@ -5,8 +5,8 @@ clear functions; % Release compiled MEX from memory before rebuilding
 % -------------------------------------------------------------------------
 % 1. Load sample dataset to infer structure fields for 'ref'
 % -------------------------------------------------------------------------
-sampleData = load(fullfile('data', 'rectangular', 'data_sim_rectangular_bias.mat'));
-refSample = sampleData.ref;
+
+
 
 % -------------------------------------------------------------------------
 % 2. Define Coder configuration options
@@ -46,7 +46,7 @@ t_P  = coder.typeof(0, [15, 15, Inf], [false, false, true]); % 15 x 15 x N
 
 % Ground-truth Struct ('ref')
 % Typeof automatically inherits structure fields; mark fields variable if needed
-t_ref = coder.typeof(refSample);
+
 
 % -------------------------------------------------------------------------
 % 4. Assemble Positional Input Arguments Cell Array
@@ -71,8 +71,8 @@ args = { ...
     t_y,        ... % 15. y
     t_leverarm, ... % 16. leverarm
     t_double,   ... % 17. M
-    t_euler,    ... % 18. euler
-    t_ref       ... % 19. ref
+    t_euler % 18. euler
+    
     };
 
 % -------------------------------------------------------------------------

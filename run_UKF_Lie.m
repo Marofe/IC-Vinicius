@@ -1,4 +1,4 @@
-function [rmse,hx,trP,euler] = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref) %#codegen
+function [hx, trP, euler] = run_UKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha,beta,kappa,L,Cen,y,leverarm,M,euler) %#codegen
 % RUN_UKF_LIE
 % Executes the Unscented Kalman Filter on Lie Groups (UKF-Lie).
 
@@ -30,5 +30,5 @@ for k=1:N-1
     end
 end
 
-rmse=evaluateStateRMSE(euler,squeeze(hx(1:3,5,:)),squeeze(hx(1:3,4,:)),ref,Cen);
+
 end

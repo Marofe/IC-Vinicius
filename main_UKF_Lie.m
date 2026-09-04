@@ -98,7 +98,7 @@ profile on -detail builtin;  % Starts tracking CPU time for the filter
 tic;
 % Use native 'run_UKF_Lie' for line-by-line math breakdown
 % Use mex version 'run_UKF_Lie_mex' for total C execution time
-[rmse_opt, hx, trP, euler] = run_UKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler, ref);
+[hx, trP, euler] = run_UKF_Lie_mex(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha_opt, beta, kappa, L, Cen, y, leverarm, M, euler);
 profile off;                 % Stop tracking before plotting starts
 profile viewer;              % Automatically open the profiler report window
 ukfTime = toc;

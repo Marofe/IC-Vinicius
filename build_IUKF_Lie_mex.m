@@ -1,12 +1,12 @@
-% Variable-dimension build script for run_EnKF_Lie MEX compilation
+% Variable-dimension build script for run_IUKF_Lie MEX compilation
 
 clear functions; % Release compiled MEX from memory before rebuilding
 
 % -------------------------------------------------------------------------
 % 1. Load sample dataset to infer structure fields for 'ref'
 % -------------------------------------------------------------------------
-sampleData = load(fullfile('data', 'rectangular', 'data_sim_rectangular_bias.mat'));
-refSample = sampleData.ref;
+
+
 
 % -------------------------------------------------------------------------
 % 2. Define Coder configuration options
@@ -44,11 +44,11 @@ t_hx = coder.typeof(0, [13, 13, Inf], [false, false, true]); % 13 x 13 x N
 t_P  = coder.typeof(0, [15, 15, Inf], [false, false, true]); % 15 x 15 x N
 
 % Ground-truth Struct ('ref')
-t_ref = coder.typeof(refSample);
+
 
 % -------------------------------------------------------------------------
 % 4. Assemble Positional Input Arguments Cell Array
-% Matches: function [...] = run_EnKF_Lie(N, time, gps_time, hx, trP, P, ...
+% Matches: function [...] = run_IUKF_Lie(N, time, gps_time, hx, trP, P, ...
 %            Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler, ref)
 % -------------------------------------------------------------------------
 args = { ...
@@ -69,13 +69,13 @@ args = { ...
     t_y,        ... % 15. y
     t_leverarm, ... % 16. leverarm
     t_double,   ... % 17. M
-    t_euler,    ... % 18. euler
-    t_ref       ... % 19. ref
+    t_euler % 18. euler
+    
     };
 
 % -------------------------------------------------------------------------
 % 5. Execute Code Generation
 % -------------------------------------------------------------------------
-disp('Compiling run_EnKF_Lie to MEX (Variable Length Support)...');
-codegen -config cfg run_EnKF_Lie -args args;
+disp('Compiling run_IUKF_Lie to MEX (Variable Length Support)...');
+codegen -config cfg run_IUKF_Lie -args args;
 disp('MEX compilation completed!');
