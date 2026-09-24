@@ -1,4 +1,4 @@
-function [g_upd,P_upd]=Update_UKF_Lie(g_pred,P_pred,Pqq,Prr,y,G_pred,Chi_R,alpha,beta,kappa,leverarm,L)
+function [g_upd,P_upd] = update_SRUKF_Lie(g_pred,P_pred,Pqq,Prr,y,G_pred,Chi_R,alpha,beta,kappa,leverarm,L)
 %% Reference: Giorgio M. Magalhães et al. (CBA 2018), Eq. 45 - 51
 % g_pred, P_pred: predicted state and covariance g(t|t-1), P(t|t-1)
 % g_upd, P_upd: updated state and covariance g(t|t), P(t|t)

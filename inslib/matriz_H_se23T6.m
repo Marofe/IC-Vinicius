@@ -11,7 +11,7 @@ Ceb33=hx(3,3);
 
 lb1=lb(1);
 lb2=lb(2);
-lb3=(3);
+lb3=lb(3);
 
 H=[[Ceb13*lb2 - Ceb12*lb3, Ceb11*lb3 - Ceb13*lb1, Ceb12*lb1 - Ceb11*lb2, 0, 0, 0, Ceb11, Ceb12, Ceb13, 0, 0, 0, 0, 0, 0]
 [Ceb23*lb2 - Ceb22*lb3, Ceb21*lb3 - Ceb23*lb1, Ceb22*lb1 - Ceb21*lb2, 0, 0, 0, Ceb21, Ceb22, Ceb23, 0, 0, 0, 0, 0, 0]

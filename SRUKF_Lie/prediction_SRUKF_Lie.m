@@ -1,4 +1,4 @@
-function [g_pred,P_pred,G_pred,Chi_R]=prediction_UKF_Lie(g_prev,P_prev,Pqq,Prr,u,alpha,beta,kappa,L,dt)
+function [g_pred,P_pred,G_pred]=prediction_SRUKF_Lie(g_prev,P_prev,Pqq,Prr,u,alpha,beta,kappa,L,dt,Chi_E,Chi_R,Chi_Q,Wm,Wc)
 %% Reference: Giorgio M. Magalhães et al. (CBA 2018), Eq. 40 - 44
 % g_prev, P_prev: previous state and covariance g(t-1|t-1), P(t-1|t-1)
 % g_pred, P_pred: predicted state and covariance g(t|t-1), P(t|t-1)
@@ -6,22 +6,10 @@ function [g_pred,P_pred,G_pred,Chi_R]=prediction_UKF_Lie(g_prev,P_prev,Pqq,Prr,u
 % Chi_R: measurement noise sigma points component (3 x 2L+1)
 %%
 p=15; % process Lie algebra dimension
-q=3;  % measurement Lie algebra dimension
-
-%% Eq. 5, 6, 40: Augmented sigma points computation (Chi)
-[Chi,Wm,Wc]=SigmaPointsLie(alpha,beta,kappa,P_prev,Pqq,Prr,L);
-
-%% Chi partition into state error, process noise, and measurement noise (Eq. 40):
-Chi_E=squeeze(Chi(1:15,:));   % State error perturbation (15 x 2L+1)
-Chi_Q=squeeze(Chi(16:30,:));  % Process noise points (15 x 2L+1)
-Chi_R=squeeze(Chi(31:33,:));  % Measurement noise points (3 x 2L+1)
+% q=3;  % measurement Lie algebra dimension
 
 %% Pre-compute geodetic quantities from mean state (shared by all sigma pts)
 % This avoids calling SingleLlaFromEcef/DCM_en/gravityModel 2*L+1 times.
-ba_0   = g_prev(6:8,9);
-bg_0   = g_prev(10:12,13);
-Cbe_0  = g_prev(1:3,1:3)';        % Cbe = Ceb'
-v0_0   = g_prev(1:3,4);
 p0_0   = g_prev(1:3,5);
 lla0   = SingleLlaFromEcef(p0_0);
 Cen0   = DCM_en(lla0(1),lla0(2));

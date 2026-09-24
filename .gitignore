@@ -1,0 +1,11 @@
+# WORKSPACE OUTPUTS & RUNTIME DATA
+Workspaces/
+*.mat
+*.asv
+
+# MATLAB CODER & MEX BUILD ARTIFACTS
+codegen/
+*.mex*
+/.agents
+/tests
+*.md

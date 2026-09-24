@@ -1,16 +1,16 @@
 function [rmse,hx,trP,euler] = run_UKF_Lie(N,time,gps_time,hx,trP,P,Pqq,Prr,u,alpha,beta,kappa,L,Cen,y,leverarm,M,euler,ref)
-nk=2;
+gps_idx=2;
 CenT=Cen';          % pre-transpose once (reused N times in loop)
 log_interval=round(N/10);
 for k=1:N-1
-    dt=time(k+1)-time(k); %adapatative sampling time
-    %% time update (prediction)
-        [hx(:,:,k+1),P(:,:,k+1),G,R]=prediction_UKF_Lie(hx(:,:,k),P(:,:,k),Pqq,Prr,u(:,k),alpha,beta,kappa,L,dt);
-    %% measurement update (correction)
-    if (abs(time(k)-gps_time(nk))<dt)
-        [hx(:,:,k+1),P(:,:,k+1)]=Update_UKF_Lie(hx(:,:,k+1),P(:,:,k+1),Pqq,Prr,y(:,nk),G,R,alpha,beta,kappa,leverarm,L);
-        if nk<M 
-            nk=nk+1;
+    dt=time(k+1)-time(k); % adaptive sampling time
+    %% time update (prediction) -> predicted state g(t|t-1)
+    [hx(:,:,k+1),P(:,:,k+1),G_pred,Chi_R]=prediction_UKF_Lie(hx(:,:,k),P(:,:,k),Pqq,Prr,u(:,k),alpha,beta,kappa,L,dt);
+    %% measurement update (correction) -> updated state g(t|t)
+    if (abs(time(k)-gps_time(gps_idx))<dt)
+        [hx(:,:,k+1),P(:,:,k+1)]=Update_UKF_Lie(hx(:,:,k+1),P(:,:,k+1),Pqq,Prr,y(:,gps_idx),G_pred,Chi_R,alpha,beta,kappa,leverarm,L);
+        if gps_idx<M 
+            gps_idx=gps_idx+1;
         end
     end
     Pk=P(:,:,k+1);
