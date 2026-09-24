@@ -1,38 +1,64 @@
-function [Chi,Wm,Wc]=SigmaPointsLie(alpha,beta,kappa,P_prev,Pqq,Prr,L)
-%% Reference: Giorgio M. Magalhães et al. (CBA 2018), Eq. 5, 6, 40
-% Augmented Covariance Matrix P = blkdiag(P_prev, Pqq, Prr)
-%   - P_prev: P(t-1|t-1) (dimension p x p = 15x15)
-%   - Pqq: process noise covariance (dimension p x p = 15x15)
-%   - Prr: measurement noise covariance (dimension q x q = 3x3)
+function [Chi, Wm, Wc] = SigmaPointsLie(varargin)
+%% SIGMAPOINTSLIE Augmented sigma points on Lie algebra
+% Reference: Giorgio M. Magalhães et al. (CBA 2018), Eq. 5, 6, 40
 %
-% Chi = [Chi(:,1) ... Chi(:,2*L+1)], dimension L x (2*L+1) = 33x67
-% Partitioned into [Chi_E; Chi_Q; Chi_R]
-%% Augmented covariance matrix on Lie algebra: xi ~ N(0, blkdiag(P_prev, Pqq, Prr))
-p15 = size(P_prev,1);  % 15
-pqq = size(Pqq,1);     % 15
-prr = size(Prr,1);     % 3
-P   = zeros(L,L);
-P(1:p15,         1:p15        ) = P_prev;
-P(p15+1:p15+pqq, p15+1:p15+pqq) = Pqq;
-P(p15+pqq+1:end, p15+pqq+1:end) = Prr;
-P   = 0.5*(P+P.');  % force symmetry
+% Calling formats:
+%   [Chi, Wm, Wc] = SigmaPointsLie(alpha, beta, kappa, P_prev, Pqq, Prr, L)       (Standard 7-arg)
+%   [Chi, Wm, Wc] = SigmaPointsLie(Eta, alpha, beta, kappa, P_prev, Pqq, Prr, L) (Legacy 8-arg)
 
-%% Cholesky decomposition of augmented covariance matrix
-[sqrP, flag] = chol(P,"lower");
-if flag ~= 0
-    % Not PD: regularise with smallest diagonal dominance shift
-    minEig = min(eig(P));  % only called if chol fails (rare)
-    P = P + eye(L)*abs(minEig*2 + 1e-14);
-    sqrP = chol(P,"lower");
+if nargin == 7
+    alpha  = varargin{1};
+    beta   = varargin{2};
+    kappa  = varargin{3};
+    P_prev = varargin{4};
+    Pqq    = varargin{5};
+    Prr    = varargin{6};
+    L      = varargin{7};
+elseif nargin == 8
+    % Eta is ignored because the mean tangent error is zero
+    alpha  = varargin{2};
+    beta   = varargin{3};
+    kappa  = varargin{4};
+    P_prev = varargin{5};
+    Pqq    = varargin{6};
+    Prr    = varargin{7};
+    L      = varargin{8};
+else
+    error('SigmaPointsLie requires 7 or 8 arguments.');
 end
 
-%% Eq. 6: UT scaling parameters and weights
-lambda=(alpha^2)*(L+kappa)-L; 
-Wm=[lambda/(lambda+L) ones(1,2*L)*(1/(2*(lambda+L)))]';
-Wc=[lambda/(lambda+L)+(1-alpha^2+beta) ones(1,2*L)*(1/(2*(lambda+L)))]';
+p15 = size(P_prev, 1);
+pqq = size(Pqq, 1);
+prr = size(Prr, 1);
 
-%% Eq. 5: Augmented Lie algebra sigma points generation (Chi)
-% Error state has zero mean: Chi(:,1) = 0
-t=sqrt(L+lambda);
-Chi = [zeros(L,1), t*sqrP, -t*sqrP]; % (2*p+q , 2*L+1)
+P = zeros(L, L);
+P(1:p15, 1:p15)                 = P_prev;
+P(p15+1:p15+pqq, p15+1:p15+pqq) = Pqq;
+P(p15+pqq+1:end, p15+pqq+1:end) = Prr;
+P = 0.5 * (P + P.'); % force numerical symmetry
+
+%% Cholesky factor (lower-triangular)
+[sqrP, flag] = chol(P, 'lower');
+if flag ~= 0
+    % Regularize if not strictly positive-definite
+    minEig = min(eig(P));
+    P_reg = P + eye(L) * abs(minEig * 2 + 1e-14);
+    sqrP = chol(P_reg, 'lower');
+end
+
+%% Unscented Transform Parameters & Weights
+lambda = (alpha^2) * (L + kappa) - L;
+t = sqrt(L + lambda);
+
+W0m = lambda / (L + lambda);
+W0c = lambda / (L + lambda) + (1 - alpha^2 + beta);
+Wim = 1 / (2 * (L + lambda));
+Wic = 1 / (2 * (L + lambda));
+
+Wm = [W0m; repmat(Wim, 2 * L, 1)]; % (2L+1) x 1
+Wc = [W0c; repmat(Wic, 2 * L, 1)]; % (2L+1) x 1
+
+%% Sigma Points Chi: [0, +t*S, -t*S]
+Chi = [zeros(L, 1), t * sqrP, -t * sqrP]; % L x (2*L+1)
+
 end
