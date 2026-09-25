@@ -3,7 +3,9 @@
 % using MATLAB Coder with variable-size array support.
 
 clear functions; % Release compiled MEX from memory before rebuilding
-rootDir = Setup_Paths(); % Ensure all project directories are on the MATLAB path
+rootDir = fileparts(fileparts(mfilename('fullpath')));
+if isempty(rootDir), rootDir = pwd; end
+Setup_Paths(false, rootDir); % Ensure all project directories are on the MATLAB path
 
 % -------------------------------------------------------------------------
 % 1. Coder Configuration

@@ -88,9 +88,8 @@ IC-Vinicius/
 │   ├── DCM_ECEF_To_NED.m
 │   ├── Gravity_WGS84.m
 │   └── Earth_Rotation.m
-├── metrics/                       # Physical estimation and consistency evaluation
-│   ├── Evaluate_State_RMSE.m      # Physically partitioned RMSE (pos, vel, att)
-│   └── Evaluate_State_Consistency.m # Lie-group NEES and GNSS innovation NIS
+├── metrics/                       # Physical state estimation error evaluation
+│   └── Evaluate_State_RMSE.m      # Physically partitioned RMSE (pos, vel, att)
 ├── visualization/                 # Pure plotting routines (isolated from algorithms)
 │   ├── Plot_Filter_Diagnostics.m
 │   ├── Plot_Position_NED.m

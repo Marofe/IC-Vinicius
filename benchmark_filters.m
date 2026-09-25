@@ -12,20 +12,23 @@
 %      Follow the command window prompts to select any filter, trajectory,
 %      or combination of them (e.g. '1', '1 2', '1,3', '2 3', or '4' for all).
 %
-%   2. Scripted / Pre-configured (use on CLI):
+%   2. Scripted / Pre-configured (use on CLI before calling the script):
 %        traj_choice     = '1 2';   % 1: Rectangular, 2: Circular, 3: Helicoidal, 4: All (or cell/numeric/names)
-%        filt_choice     = '1 3';   % 1: EKF_Lie, 2: SPUKF_Lie, 3: UKF_Lie, 4: All (or cell/numeric/names)
+%        filt_choice     = '1 3';   % 1: EKF_Lie, 2: UKF_Lie, 3: SPUKF_Lie, 4: All (or cell/numeric/names)
 %        use_mex         = true;    % true (default): compiled MEX | false: MATLAB .m runner
 %        enable_plots    = false;   % true: show diagnostic plots | false: headless/batch
 %        enable_profiler = false;   % true: run MATLAB profiler | false (default)
 %        force_rebuild   = false;   % true: force MEX recompile | false (default)
 %        benchmark_filters
 
-% clear all
-% close all
-% clc
+clearvars -except traj_choice filt_choice use_mex enable_plots enable_profiler force_rebuild;
 
-rootDir = Setup_Paths();
+rootDir = fileparts(mfilename('fullpath'));
+if isempty(rootDir)
+    rootDir = pwd;
+end
+addpath(rootDir, '-begin');
+Setup_Paths(false, rootDir);
 
 %% 1. Interactive or Scripted Selection of Trajectories and Filters
 disp('===================================================================');
@@ -62,15 +65,18 @@ trajectories = {};
 if contains(traj_str_lower, '4') || contains(traj_str_lower, 'all')
     trajectories = {'rectangular', 'circular', 'helicoidal'};
 else
-    if contains(traj_str_lower, '1') || contains(traj_str_lower, 'rect')
-        trajectories{end+1} = 'rectangular';
+    traj_tokens = strsplit(strtrim(traj_str_lower), {' ', ',', ';', '\t'}, 'CollapseDelimiters', true);
+    for tokIdx = 1:numel(traj_tokens)
+        tok = traj_tokens{tokIdx};
+        if strcmp(tok, '1') || contains(tok, 'rect')
+            trajectories{end+1} = 'rectangular'; %#ok<AGROW>
+        elseif strcmp(tok, '2') || contains(tok, 'circ')
+            trajectories{end+1} = 'circular'; %#ok<AGROW>
+        elseif strcmp(tok, '3') || contains(tok, 'heli')
+            trajectories{end+1} = 'helicoidal'; %#ok<AGROW>
+        end
     end
-    if contains(traj_str_lower, '2') || contains(traj_str_lower, 'circ')
-        trajectories{end+1} = 'circular';
-    end
-    if contains(traj_str_lower, '3') || contains(traj_str_lower, 'heli')
-        trajectories{end+1} = 'helicoidal';
-    end
+    trajectories = unique(trajectories, 'stable');
     if isempty(trajectories)
         trajectories = {'rectangular', 'circular', 'helicoidal'};
     end
@@ -101,22 +107,23 @@ else
 end
 filt_str_upper = upper(filt_str);
 
-all_filters = {'EKF_Lie', 'SPUKF_Lie', 'UKF_Lie'};
+all_filters = {'EKF_Lie', 'UKF_Lie', 'SPUKF_Lie'};
 filters = {};
 if contains(filt_str_upper, '4') || contains(filt_str_upper, 'ALL')
     filters = all_filters;
 else
-    filt_str_no_spukf = strrep(filt_str_upper, 'SPUKF_LIE', '');
-    filt_str_no_spukf = strrep(filt_str_no_spukf, 'SPUKF', '');
-    if contains(filt_str_upper, '1') || contains(filt_str_upper, 'EKF')
-        filters{end+1} = 'EKF_Lie';
+    filt_tokens = strsplit(strtrim(filt_str_upper), {' ', ',', ';', '\t'}, 'CollapseDelimiters', true);
+    for tokIdx = 1:numel(filt_tokens)
+        tok = filt_tokens{tokIdx};
+        if strcmp(tok, '1') || contains(tok, 'EKF')
+            filters{end+1} = 'EKF_Lie'; %#ok<AGROW>
+        elseif strcmp(tok, '3') || contains(tok, 'SPUKF')
+            filters{end+1} = 'SPUKF_Lie'; %#ok<AGROW>
+        elseif strcmp(tok, '2') || contains(tok, 'UKF')
+            filters{end+1} = 'UKF_Lie'; %#ok<AGROW>
+        end
     end
-    if contains(filt_str_no_spukf, '2') || contains(filt_str_no_spukf, 'UKF')
-        filters{end+1} = 'UKF_Lie';
-    end
-    if contains(filt_str_upper, '3') || contains(filt_str_upper, 'SPUKF')
-        filters{end+1} = 'SPUKF_Lie';
-    end
+    filters = unique(filters, 'stable');
     if isempty(filters)
         filters = all_filters;
     end
@@ -135,11 +142,11 @@ end
 if ~exist('enable_plots', 'var') || isempty(enable_plots)
     if is_interactive
         default_plot = 'n';
-        if isscalar(trajectories) && isscalar(filters)
+        if isscalar(trajectories)
             default_plot = 'y';
         end
         try
-            plot_choice = input(sprintf('Step 3: Generate diagnostic plots? (y/n): %s', default_plot), 's');
+            plot_choice = input(sprintf('Step 3: Generate diagnostic plots? (y/n) [default: %s]: ', default_plot), 's');
         catch
             plot_choice = default_plot;
         end
@@ -235,6 +242,10 @@ for t = 1:numel(trajectories)
         results.(trajectory) = struct();
     end
 
+    hx_traj    = cell(1, numel(filters));
+    trP_traj   = cell(1, numel(filters));
+    euler_traj = cell(1, numel(filters));
+
     for i = 1:numel(filters)
         fName = filters{i};
         fprintf('\n========================================\n');
@@ -279,20 +290,18 @@ for t = 1:numel(trajectories)
             end
         end
         
-        % Metric & Consistency Evaluation
+        % Metric Evaluation
         [pos_out, vel_out] = Extract_Lie_States(hx);
         [rmse_calc, angles_rmse, pos_rmse, vel_rmse] = Evaluate_State_RMSE(euler, pos_out, vel_out, ref, Cen);
-        [nees_metrics, nis_metrics] = Evaluate_State_Consistency(hx, trP, ref, Cen, y, gps_time, time, leverarm, Prr);
         
         % Minimal Workspace Persistence per filter/trajectory run
         targetFile = fullfile(targetFolder, sprintf('sol_%s_%s.mat', fName, trajectory));
         save(targetFile, 'hx', 'trP', 'euler', 'time', 'rmse_calc', 'elapsed_time', '-v7.3');
         fprintf('Essential solution saved to: %s\n', targetFile);
         
-        % Optional Diagnostic Visualization
-        if enable_plots
-            Plot_Filter_Diagnostics(time, gps_time, hx, trP, euler, y, ref, Cen, leverarm, fName, trajectory);
-        end
+        hx_traj{i}    = hx;
+        trP_traj{i}   = trP;
+        euler_traj{i} = euler;
         
         % Store metrics non-destructively in benchmark database
         results.(trajectory).(fName).rmse_total         = rmse_calc;
@@ -301,21 +310,17 @@ for t = 1:numel(trajectories)
         results.(trajectory).(fName).att_rmse_3d        = norm(angles_rmse);
         results.(trajectory).(fName).execTime           = elapsed_time;
         results.(trajectory).(fName).perStepTime        = perStepTime;
-        results.(trajectory).(fName).nees_mean_total    = nees_metrics.mean_total;
-        results.(trajectory).(fName).nees_mean_pos      = nees_metrics.mean_pos;
-        results.(trajectory).(fName).nees_mean_vel      = nees_metrics.mean_vel;
-        results.(trajectory).(fName).nees_mean_att      = nees_metrics.mean_att;
-        results.(trajectory).(fName).nees_in_bounds_pct = nees_metrics.in_bounds_pct;
-        results.(trajectory).(fName).nis_mean           = nis_metrics.mean_nis;
-        results.(trajectory).(fName).nis_in_bounds_pct  = nis_metrics.in_bounds_pct;
         
         fprintf('Finished %s in %.4f seconds. Combined RMSE: %.4f\n', fName, elapsed_time, rmse_calc);
         fprintf('  Per Step Time: %.6f seconds\n', perStepTime);
-        fprintf('  Consistency: Mean NEES = %.2f (95%% in-bounds: %.1f%%), Mean NIS = %.2f (95%% in-bounds: %.1f%%)\n', ...
-            nees_metrics.mean_total, nees_metrics.in_bounds_pct, nis_metrics.mean_nis, nis_metrics.in_bounds_pct);
         
         % Save incrementally so partial runs are preserved
         save(resultsFile, 'results');
+    end
+
+    % Optional Diagnostic Visualization (combined set of figures for all selected filters on this dataset)
+    if enable_plots
+        Plot_Filter_Diagnostics(time, gps_time, hx_traj, trP_traj, euler_traj, y, ref, Cen, leverarm, filters, trajectory);
     end
 end
 
@@ -327,24 +332,22 @@ for t = 1:numel(trajectories)
     if ~isfield(results, trajectory) || isempty(fieldnames(results.(trajectory)))
         continue;
     end
-    fprintf('\n\n==================== BENCHMARK RESULTS: %s ====================\n', upper(trajectory));
-    fprintf('%-10s | %-10s | %-10s | %-10s | %-10s | %-9s | %-9s | %-8s | %-10s\n', ...
-        'Filter', 'Tot RMSE', 'Pos(m)', 'Vel(m/s)', 'Att(deg)', 'Mean NEES', 'Mean NIS', 'Time(s)', 'Step(us)');
-    fprintf('-------------------------------------------------------------------------------------------------------\n');
+    line_len   = 90;
+    title_text = sprintf(' BENCHMARK RESULTS: %s ', upper(trajectory));
+    fprintf('\n\n%s\n', pad(title_text, line_len, 'both', '='));    
+    fprintf('%-10s | %-10s | %-10s | %-10s | %-10s | %-7s | %-10s\n', ...
+        'Filter', 'Tot RMSE', 'Pos(m) RMSE', 'Vel(m/s) RMSE', 'Att(deg) RMSE', 'Time(s)', 'Step(us)');
+    fprintf('--------------------------------------------------------------------------------------\n');
     
     fields = fieldnames(results.(trajectory));
     for i = 1:numel(fields)
         fName = fields{i};
         res = results.(trajectory).(fName);
-        nees_str = 'N/A'; nis_str = 'N/A';
-        if isfield(res, 'nees_mean_total'), nees_str = sprintf('%9.2f', res.nees_mean_total); end
-        if isfield(res, 'nis_mean'), nis_str = sprintf('%9.2f', res.nis_mean); end
-        
-        fprintf('%-10s | %10.4f | %10.4f | %10.4f | %10.4f | %s | %s | %8.3f | %10.2f\n', ...
+        fprintf('%-10s | %10.4f | %11.4f | %13.4f | %13.4f | %7.3f | %8.2f\n', ...
             fName, res.rmse_total, res.pos_rmse_3d, res.vel_rmse_3d, res.att_rmse_3d, ...
-            nees_str, nis_str, res.execTime, res.perStepTime * 1e6);
+            res.execTime, res.perStepTime * 1e6);
     end
-    fprintf('=======================================================================================================\n');
+    fprintf('%s\n', repmat('=', 1, line_len));
 end
 
 % Clean up temporary selection variables from workspace so subsequent runs prompt cleanly

@@ -19,10 +19,18 @@ if forceRebuild
     return;
 end
 
-mexFileName = ['run_' filterName '_mex.' mexext];
-mexFile = which(mexFileName);
+rootDir = fileparts(fileparts(mfilename('fullpath')));
+if isempty(rootDir)
+    rootDir = pwd;
+end
 
-if isempty(mexFile)
+mexFileName = ['run_' filterName '_mex.' mexext];
+mexFile = fullfile(rootDir, 'build', 'mex', mexFileName);
+if ~isfile(mexFile)
+    mexFile = which(mexFileName);
+end
+
+if isempty(mexFile) || ~isfile(mexFile)
     needsRebuild = true;
     return;
 end
@@ -33,11 +41,6 @@ if isempty(mexInfo)
     return;
 end
 mexDate = mexInfo.datenum;
-
-rootDir = fileparts(fileparts(mfilename('fullpath')));
-if isempty(rootDir)
-    rootDir = pwd;
-end
 
 % Dependent directories to scan recursively for changes
 depDirs = { ...

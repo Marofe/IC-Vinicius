@@ -1,21 +1,25 @@
-function rootDir = Setup_Paths(include_legacy)
+function rootDir = Setup_Paths(include_legacy, rootDirOverride)
 % SETUP_PATHS Configures MATLAB search paths for the navigation repository.
 % Uses robust script-relative path resolution so scripts execute correctly
 % regardless of the current working directory.
 %
 % Usage:
-%   Setup_Paths()               % Standard active project path setup
-%   Setup_Paths(true)           % Includes legacy Euler/quaternion/utility folders
-%   rootDir = Setup_Paths(...)  % Returns resolved repository root directory
+%   Setup_Paths()                        % Standard active project path setup
+%   Setup_Paths(true)                    % Includes legacy Euler/quaternion/utility folders
+%   rootDir = Setup_Paths(false, myDir)  % Explicitly anchors paths to myDir
 
-if nargin < 1
+if nargin < 1 || isempty(include_legacy)
     include_legacy = false;
 end
 
-% Resolve repository root relative to this script location
-rootDir = fileparts(mfilename('fullpath'));
-if isempty(rootDir)
-    rootDir = pwd;
+% Resolve repository root relative to caller override or this script location
+if nargin >= 2 && ~isempty(rootDirOverride)
+    rootDir = char(rootDirOverride);
+else
+    rootDir = fileparts(mfilename('fullpath'));
+    if isempty(rootDir)
+        rootDir = pwd;
+    end
 end
 
 % Explicitly define active project directories (excluding .git, .agents, and codegen)
@@ -41,13 +45,6 @@ projectDirs = { ...
     'tests' ...
 };
 
-for i = 1:numel(projectDirs)
-    targetPath = fullfile(rootDir, projectDirs{i});
-    if exist(targetPath, 'dir')
-        addpath(targetPath);
-    end
-end
-
 % Add legacy folders if explicitly requested
 if include_legacy
     legacyDirs = { ...
@@ -56,16 +53,23 @@ if include_legacy
         fullfile('inslib', 'legacy', 'orphaned_utilities'), ...
         fullfile('inslib', 'legacy', 'compat_aliases') ...
     };
-    for i = 1:numel(legacyDirs)
+    for i = numel(legacyDirs):-1:1
         targetPath = fullfile(rootDir, legacyDirs{i});
         if exist(targetPath, 'dir')
-            addpath(targetPath);
+            addpath(targetPath, '-begin');
         end
     end
 end
 
-% Add repository root directory itself
-addpath(rootDir);
+for i = numel(projectDirs):-1:1
+    targetPath = fullfile(rootDir, projectDirs{i});
+    if exist(targetPath, 'dir')
+        addpath(targetPath, '-begin');
+    end
+end
+
+% Add repository root directory itself at the front of the path
+addpath(rootDir, '-begin');
 
 if nargout == 0
     fprintf('Navigation project paths initialized successfully from: %s\n', rootDir);
