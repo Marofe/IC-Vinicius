@@ -15,8 +15,7 @@ cfg.dim.p             = 15;        % Process Lie algebra error state dimension (
 cfg.dim.q             = 3;         % Measurement Lie algebra dimension (GNSS position in ECEF)
 cfg.dim.n             = 13;        % Homogeneous state matrix dimension on SE_2(3) x R^6
 cfg.dim.L             = 2*cfg.dim.p + cfg.dim.q; % L = 33 (augmented UKF dimension)
-cfg.dim.N_sigma_ukf   = 2*cfg.dim.L + 1;         % 67 sigma points for full UKF-Lie
-cfg.dim.N_sigma_spukf = 2*cfg.dim.p + 1;         % 31 sigma points for SPUKF-Lie
+cfg.dim.N_sigma_ukf = 2*cfg.dim.L + 1;         % 67 sigma points for full UKF-Lie
 
 %% 2. Sensor Continuous Noise Spectral Densities / Discrete Standard Deviations
 % Physical units:

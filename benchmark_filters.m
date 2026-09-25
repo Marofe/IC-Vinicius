@@ -14,7 +14,7 @@
 %
 %   2. Scripted / Pre-configured (use on CLI before calling the script):
 %        traj_choice     = '1 2';   % 1: Rectangular, 2: Circular, 3: Helicoidal, 4: All (or cell/numeric/names)
-%        filt_choice     = '1 3';   % 1: EKF_Lie, 2: UKF_Lie, 3: SPUKF_Lie, 4: All (or cell/numeric/names)
+%        filt_choice     = '1 2';   % 1: EKF_Lie, 2: UKF_Lie, 3: All (or cell/numeric/names)
 %        use_mex         = true;    % true (default): compiled MEX | false: MATLAB .m runner
 %        enable_plots    = false;   % true: show diagnostic plots | false: headless/batch
 %        enable_profiler = false;   % true: run MATLAB profiler | false (default)
@@ -85,18 +85,17 @@ end
 % --- Step 2: Filter Selection ---
 if ~exist('filt_choice', 'var')
     disp(' ');
-    disp('Step 2: Select Filters (single number, combination e.g. 1 3 or 2,3, or 4 for all):');
+    disp('Step 2: Select Filters (single number, combination e.g. 1 2, or 3 for all):');
     disp('  [1] EKF_Lie');
     disp('  [2] UKF_Lie');
-    disp('  [3] SPUKF_Lie');
-    disp('  [4] All Available Filters');
+    disp('  [3] All Available Filters');
     try
-        filt_choice = input('Enter your choice (1-4 or combination): ', 's');
+        filt_choice = input('Enter your choice (1-3 or combination): ', 's');
     catch
-        filt_choice = '4';
+        filt_choice = '3';
     end
 end
-if isempty(filt_choice), filt_choice = '4'; end
+if isempty(filt_choice), filt_choice = '3'; end
 
 if iscell(filt_choice) || isstring(filt_choice)
     filt_str = char(strjoin(string(filt_choice(:)'), ' '));
@@ -107,9 +106,9 @@ else
 end
 filt_str_upper = upper(filt_str);
 
-all_filters = {'EKF_Lie', 'UKF_Lie', 'SPUKF_Lie'};
+all_filters = {'EKF_Lie', 'UKF_Lie'};
 filters = {};
-if contains(filt_str_upper, '4') || contains(filt_str_upper, 'ALL')
+if contains(filt_str_upper, '3') || contains(filt_str_upper, '4') || contains(filt_str_upper, 'ALL')
     filters = all_filters;
 else
     filt_tokens = strsplit(strtrim(filt_str_upper), {' ', ',', ';', '\t'}, 'CollapseDelimiters', true);
@@ -117,8 +116,6 @@ else
         tok = filt_tokens{tokIdx};
         if strcmp(tok, '1') || contains(tok, 'EKF')
             filters{end+1} = 'EKF_Lie'; %#ok<AGROW>
-        elseif strcmp(tok, '3') || contains(tok, 'SPUKF')
-            filters{end+1} = 'SPUKF_Lie'; %#ok<AGROW>
         elseif strcmp(tok, '2') || contains(tok, 'UKF')
             filters{end+1} = 'UKF_Lie'; %#ok<AGROW>
         end

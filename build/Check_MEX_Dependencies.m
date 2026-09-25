@@ -4,7 +4,7 @@ function needsRebuild = Check_MEX_Dependencies(filterName, forceRebuild)
 % Prevents running stale MEX binaries when underlying core/filter files change.
 %
 % Inputs:
-%   filterName   - Filter name string (e.g. 'UKF_Lie', 'EKF_Lie', 'SPUKF_Lie')
+%   filterName   - Filter name string (e.g. 'UKF_Lie', 'EKF_Lie')
 %   forceRebuild - Boolean flag to force recompilation (default: false)
 %
 % Output:

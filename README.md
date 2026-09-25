@@ -24,14 +24,12 @@ Instead of parametrizing attitude with Euler angles or quaternions in ℝⁿ, al
 |:------------ |:------------------------------------------------------------------------------------------------- |:------------:|
 | **EKF-Lie**  | Analytical EKF on SE₂(3) × ℝ⁶ using the group adjoint Ad_G and discrete error Jacobians          | —            |
 | **UKF-Lie**  | Full augmented sigma-point filter with nonlinear Fréchet mean estimation (L = 33)                 | 67           |
-| **SPUKF-Lie**| Single-Propagation hybrid: mean via group exponential, sigma points only at measurement update     | 31           |
-| **SRUKF-Lie**| Square-Root formulation on lower-triangular Cholesky factors, no explicit matrix inversion         | 67           |
+| **SRUKF-Lie**| Square-Root formulation on lower-triangular Cholesky factors, no explicit matrix inversion (WIP)  | 67           |
 
 **References:**
 1. G. M. Magalhães, H. T. M. Kussaba, and J. Y. Ishihara, "Unscented Kalman filter on Lie groups for radar tracking," CBA, pp. 1–8, Sep. 2018.
 2. C. D. R. Menegaz, J. Y. Ishihara, G. A. Borges, and A. N. Vargas, "A systematization of the unscented Kalman filter theory," IEEE TAC, vol. 60, no. 10, pp. 2583–2598, Oct. 2015.
 3. G. Bourmaud, R. Mégret, A. Giremus, and Y. Berthoumieu, "Discrete extended Kalman filter on Lie groups," EUSIPCO, pp. 1–5, Sep. 2013.
-4. S. K. Biswas, L. Qiao, and A. G. Dempster, "A novel a priori state computation strategy for the unscented Kalman filter to improve computational efficiency," IEEE TAC, vol. 62, no. 4, pp. 1852–1864, Apr. 2017.
 
 ## Repository Structure
 
@@ -64,7 +62,6 @@ IC-Vinicius/
 │   └── rotation/                  # Attitude DCM and Euler angle conversions
 │       ├── Euler_Deg_From_Rotm.m
 │       ├── Euler_Rad_From_Rotm.m
-│       ├── Rotm_From_Euler_Deg.m
 │       ├── Rotm_Euler_Rad.m
 │       ├── Rotm_Euler_Deg.m
 │       └── Euler_ENU_To_NED.m
@@ -72,18 +69,14 @@ IC-Vinicius/
 │   ├── ekf_lie/
 │   │   ├── Prediction_EKF_Lie.m
 │   │   └── Update_EKF_Lie.m
-│   ├── spukf_lie/
-│   │   ├── Prediction_SPUKF_Lie.m
-│   │   └── Update_SPUKF_Lie.m
 │   └── ukf_lie/
 │       ├── Prediction_UKF_Lie.m
 │       └── Update_UKF_Lie.m
 ├── runners/                       # Filter loop orchestrators
 │   ├── Run_EKF_Lie.m
-│   ├── Run_UKF_Lie.m
-│   └── Run_SPUKF_Lie.m
+│   └── Run_UKF_Lie.m
 ├── geodesy/                       # Geodetic conversions and frame transformations
-│   ├── Single_LLA_From_ECEF.m     # Iterative LLA from ECEF coordinate conversion
+│   ├── Single_LLA_From_ECEF.m     # Karl Osen (2017) LLA from ECEF coordinate conversion
 │   ├── ECEF_From_LLA.m
 │   ├── DCM_ECEF_To_NED.m
 │   ├── Gravity_WGS84.m
@@ -99,7 +92,6 @@ IC-Vinicius/
 │   ├── mex/                       # Compiled MEX binaries (gitignored)
 │   ├── Build_EKF_Lie_MEX.m
 │   ├── Build_UKF_Lie_MEX.m
-│   ├── Build_SPUKF_Lie_MEX.m
 │   └── Check_MEX_Dependencies.m
 ├── SRUKF_Lie_WIP/                 # Square-Root UKF on Lie Groups (work-in-progress)
 │   ├── prediction_SRUKF_Lie.m
@@ -120,9 +112,7 @@ IC-Vinicius/
 │   ├── circular/
 │   └── helicoidal/
 ├── doc/                           # LaTeX technical documentation
-│   ├── main.tex
-│   └── SPUKF_Algorithm.tex
-├── tests/                         # Structural, equivalence, and adversarial test suites
+│   └── main.tex
 ├── Setup_Paths.m                  # Root bootstrapping path setup
 └── benchmark_filters.m            # Unified filter runner and comparison benchmark suite
 ```
@@ -135,7 +125,7 @@ benchmark_filters;
 
 % 2. Scripted mode (run specific filters/trajectories or combinations)
 traj_choice  = '1 2';   % 1: rectangular, 2: circular, 3: helicoidal, 4: all
-filt_choice  = '1 3';   % 1: EKF_Lie, 2: SPUKF_Lie, 3: UKF_Lie, 4: all
+filt_choice  = '1 2';   % 1: EKF_Lie, 2: UKF_Lie, 3: all
 use_mex      = true;    % true: compiled MEX | false: pure MATLAB .m
 enable_plots = false;   % true: show diagnostic plots
 benchmark_filters;
@@ -149,7 +139,6 @@ Pre-compiled MEX binaries provide 10-50x speedup for long trajectories:
 Setup_Paths;
 Build_EKF_Lie_MEX;
 Build_UKF_Lie_MEX;
-Build_SPUKF_Lie_MEX;
 ```
 
 Requires MATLAB Coder and a supported C/C++ compiler.
