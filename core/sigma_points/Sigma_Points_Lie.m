@@ -54,10 +54,10 @@ if flag3 ~= 0
     S_rr   = chol(Prr_sym + eye(prr) * abs(minEig * 2 + 1e-14), 'lower');
 end
 
-sqrP = zeros(L, L);
-sqrP(1:p15, 1:p15)                 = S_prev;
-sqrP(p15+1:p15+pqq, p15+1:p15+pqq) = S_qq;
-sqrP(p15+pqq+1:end, p15+pqq+1:end) = S_rr;
+Sk = zeros(L, L);
+Sk(1:p15, 1:p15)                 = S_prev;
+Sk(p15+1:p15+pqq, p15+1:p15+pqq) = S_qq;
+Sk(p15+pqq+1:end, p15+pqq+1:end) = S_rr;
 
 %% Unscented Transform Parameters & Weights (Eq. 6)
 lambda = (alpha^2) * (L + kappa) - L;
@@ -72,5 +72,5 @@ Wm = [W0m; repmat(Wim, 2 * L, 1)]; % (2L+1) x 1
 Wc = [W0c; repmat(Wic, 2 * L, 1)]; % (2L+1) x 1
 
 %% Sigma Points Chi: [0, +t*S, -t*S] (Eq. 5)
-Chi = [zeros(L, 1), t * sqrP, -t * sqrP]; % L x (2*L+1)
+Chi = [zeros(L, 1), t * Sk, -t * Sk]; % L x (2*L+1)
 end

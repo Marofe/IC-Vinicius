@@ -19,7 +19,7 @@ for k = 1:N-1
     
     %% 2. Measurement Update (Correction)
     if (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2)
-        [g_upd, P_upd] = Update_UKF_Lie(g_pred, P_curr, Pqq, Prr, y(:, gps_idx), G_pred, Chi_R, alpha, beta, kappa, leverarm, L);
+        [g_upd, P_upd] = Update_UKF_Lie(g_pred, P_curr, Prr, y(:, gps_idx), G_pred, Chi_R, alpha, beta, kappa, leverarm, L);
         hx(:, :, k+1) = g_upd;
         P_curr = P_upd;
         gps_idx = gps_idx + 1;

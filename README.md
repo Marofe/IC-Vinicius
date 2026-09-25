@@ -24,12 +24,13 @@ Instead of parametrizing attitude with Euler angles or quaternions in ℝⁿ, al
 |:------------ |:------------------------------------------------------------------------------------------------- |:------------:|
 | **EKF-Lie**  | Analytical EKF on SE₂(3) × ℝ⁶ using the group adjoint Ad_G and discrete error Jacobians          | —            |
 | **UKF-Lie**  | Full augmented sigma-point filter with nonlinear Fréchet mean estimation (L = 33)                 | 67           |
-| **SRUKF-Lie**| Square-Root formulation on lower-triangular Cholesky factors, no explicit matrix inversion (WIP)  | 67           |
+| **SRUKF-Lie**| Square-Root formulation on lower-triangular Cholesky factors, no explicit matrix inversion        | 67           |
 
 **References:**
 1. G. M. Magalhães, H. T. M. Kussaba, and J. Y. Ishihara, "Unscented Kalman filter on Lie groups for radar tracking," CBA, pp. 1–8, Sep. 2018.
 2. C. D. R. Menegaz, J. Y. Ishihara, G. A. Borges, and A. N. Vargas, "A systematization of the unscented Kalman filter theory," IEEE TAC, vol. 60, no. 10, pp. 2583–2598, Oct. 2015.
 3. G. Bourmaud, R. Mégret, A. Giremus, and Y. Berthoumieu, "Discrete extended Kalman filter on Lie groups," EUSIPCO, pp. 1–5, Sep. 2013.
+4. R. van der Merwe and E. A. Wan, "The square-root unscented Kalman filter for state and parameter-estimation," ICASSP, vol. 6, pp. 3461–3464, May 2001.
 
 ## Repository Structure
 
@@ -69,12 +70,16 @@ IC-Vinicius/
 │   ├── ekf_lie/
 │   │   ├── Prediction_EKF_Lie.m
 │   │   └── Update_EKF_Lie.m
-│   └── ukf_lie/
-│       ├── Prediction_UKF_Lie.m
-│       └── Update_UKF_Lie.m
+│   ├── ukf_lie/
+│   │   ├── Prediction_UKF_Lie.m
+│   │   └── Update_UKF_Lie.m
+│   └── srukf_lie/
+│       ├── Prediction_SRUKF_Lie.m
+│       └── Update_SRUKF_Lie.m
 ├── runners/                       # Filter loop orchestrators
 │   ├── Run_EKF_Lie.m
-│   └── Run_UKF_Lie.m
+│   ├── Run_UKF_Lie.m
+│   └── Run_SRUKF_Lie.m
 ├── geodesy/                       # Geodetic conversions and frame transformations
 │   ├── Single_LLA_From_ECEF.m     # Karl Osen (2017) LLA from ECEF coordinate conversion
 │   ├── ECEF_From_LLA.m
@@ -92,12 +97,8 @@ IC-Vinicius/
 │   ├── mex/                       # Compiled MEX binaries (gitignored)
 │   ├── Build_EKF_Lie_MEX.m
 │   ├── Build_UKF_Lie_MEX.m
+│   ├── Build_SRUKF_Lie_MEX.m
 │   └── Check_MEX_Dependencies.m
-├── SRUKF_Lie_WIP/                 # Square-Root UKF on Lie Groups (work-in-progress)
-│   ├── prediction_SRUKF_Lie.m
-│   ├── update_SRUKF_Lie.m
-│   ├── run_SRUKF_Lie.m
-│   └── SRSigmaPointsLie.m
 ├── inslib/                        # Legacy navigation archive
 │   ├── addLibrary.m               # Backwards-compatible legacy path loader
 │   └── legacy/                    # Quarantined Euler/quaternion routines and aliases
@@ -125,7 +126,7 @@ benchmark_filters;
 
 % 2. Scripted mode (run specific filters/trajectories or combinations)
 traj_choice  = '1 2';   % 1: rectangular, 2: circular, 3: helicoidal, 4: all
-filt_choice  = '1 2';   % 1: EKF_Lie, 2: UKF_Lie, 3: all
+filt_choice  = '1 2 3'; % 1: EKF_Lie, 2: UKF_Lie, 3: SRUKF_Lie, 4: all
 use_mex      = true;    % true: compiled MEX | false: pure MATLAB .m
 enable_plots = false;   % true: show diagnostic plots
 benchmark_filters;
@@ -139,6 +140,7 @@ Pre-compiled MEX binaries provide 10-50x speedup for long trajectories:
 Setup_Paths;
 Build_EKF_Lie_MEX;
 Build_UKF_Lie_MEX;
+Build_SRUKF_Lie_MEX;
 ```
 
 Requires MATLAB Coder and a supported C/C++ compiler.
