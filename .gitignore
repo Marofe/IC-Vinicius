@@ -6,6 +6,3 @@ Workspaces/
 # MATLAB CODER & MEX BUILD ARTIFACTS
 codegen/
 *.mex*
-/.agents
-/tests
-*.md

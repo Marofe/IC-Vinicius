@@ -1,0 +1,6 @@
+function S = Skew_Symmetric_3(v) %#codegen
+% SKEW_SYMMETRIC_3 Constructs 3x3 skew-symmetric cross-product matrix [v]_x.
+S = [  0,   -v(3),  v(2); ...
+      v(3),   0,   -v(1); ...
+     -v(2),  v(1),   0  ];
+end
