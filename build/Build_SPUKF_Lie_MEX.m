@@ -1,5 +1,5 @@
-% Build_SRUKF_Lie_MEX  MEX build script for Run_SRUKF_Lie
-% Compiles Run_SRUKF_Lie.m (18 inputs, 3 outputs) into build/mex/run_SRUKF_Lie_mex
+% Build_SPUKF_Lie_MEX  MEX build script for Run_SPUKF_Lie
+% Compiles Run_SPUKF_Lie.m (18 inputs, 3 outputs) into build/mex/run_SPUKF_Lie_mex
 % using MATLAB Coder with variable-size array support.
 
 clear functions; % Release compiled MEX from memory before rebuilding
@@ -33,7 +33,7 @@ t_hx       = coder.typeof(0, [13, 13, Inf], [false, false, true]); % 13 x 13 x N
 t_P        = coder.typeof(0, [15, 15, Inf], [false, false, true]); % 15 x 15 (or 15 x 15 x N)
 
 % -------------------------------------------------------------------------
-% 3. Input Arguments (18 args, matches Run_SRUKF_Lie signature)
+% 3. Input Arguments (18 args, matches Run_SPUKF_Lie signature)
 % -------------------------------------------------------------------------
 args = { ...
     t_double,   ... % 1.  N
@@ -59,13 +59,13 @@ args = { ...
 % -------------------------------------------------------------------------
 % 4. Code Generation
 % -------------------------------------------------------------------------
-disp('Compiling Run_SRUKF_Lie to MEX (Variable Length Support)...');
+disp('Compiling Run_SPUKF_Lie to MEX (Variable Length Support)...');
 mexOutDir = fullfile(rootDir, 'build', 'mex');
 if ~exist(mexOutDir, 'dir')
     mkdir(mexOutDir);
 end
 addpath(mexOutDir);
-outMex = fullfile(mexOutDir, 'run_SRUKF_Lie_mex');
-codegenDir = fullfile(rootDir, 'codegen', 'mex', 'run_SRUKF_Lie_mex');
-codegen('-config', cfg, 'Run_SRUKF_Lie', '-args', args, '-o', outMex, '-d', codegenDir);
+outMex = fullfile(mexOutDir, 'run_SPUKF_Lie_mex');
+codegenDir = fullfile(rootDir, 'codegen', 'mex', 'run_SPUKF_Lie_mex');
+codegen('-config', cfg, 'Run_SPUKF_Lie', '-args', args, '-o', outMex, '-d', codegenDir);
 disp('MEX compilation completed!');

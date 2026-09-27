@@ -1,30 +1,6 @@
-function [Chi, Wm, Wc] = Sigma_Points_Lie(varargin) %#codegen
+function [Chi, Wm, Wc] = Sigma_Points_Lie(alpha, beta, kappa, P_prev, Pqq, Prr, L) %#codegen
 %% SIGMA_POINTS_LIE Augmented sigma points on Lie algebra using block-diagonal Cholesky
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eq. 5, 6, 40
-%
-% Calling formats:
-%   [Chi, Wm, Wc] = Sigma_Points_Lie(alpha, beta, kappa, P_prev, Pqq, Prr, L)       (Standard 7-arg)
-%   [Chi, Wm, Wc] = Sigma_Points_Lie(Eta, alpha, beta, kappa, P_prev, Pqq, Prr, L) (Legacy 8-arg)
-
-if nargin == 7
-    alpha  = varargin{1};
-    beta   = varargin{2};
-    kappa  = varargin{3};
-    P_prev = varargin{4};
-    Pqq    = varargin{5};
-    Prr    = varargin{6};
-    L      = varargin{7};
-elseif nargin == 8
-    alpha  = varargin{2};
-    beta   = varargin{3};
-    kappa  = varargin{4};
-    P_prev = varargin{5};
-    Pqq    = varargin{6};
-    Prr    = varargin{7};
-    L      = varargin{8};
-else
-    error('Sigma_Points_Lie requires 7 or 8 arguments.');
-end
 
 p15 = size(P_prev, 1);
 pqq = size(Pqq, 1);
@@ -65,11 +41,10 @@ t      = sqrt(L + lambda);
 
 W0m = lambda / (L + lambda);
 W0c = lambda / (L + lambda) + (1 - alpha^2 + beta);
-Wim = 1 / (2 * (L + lambda));
-Wic = 1 / (2 * (L + lambda));
+Wi = 1 / (2 * (L + lambda));
 
-Wm = [W0m; repmat(Wim, 2 * L, 1)]; % (2L+1) x 1
-Wc = [W0c; repmat(Wic, 2 * L, 1)]; % (2L+1) x 1
+Wm = [W0m; repmat(Wi, 2 * L, 1)]; % (2L+1) x 1
+Wc = [W0c; repmat(Wi, 2 * L, 1)]; % (2L+1) x 1
 
 %% Sigma Points Chi: [0, +t*S, -t*S] (Eq. 5)
 Chi = [zeros(L, 1), t * Sk, -t * Sk]; % L x (2*L+1)

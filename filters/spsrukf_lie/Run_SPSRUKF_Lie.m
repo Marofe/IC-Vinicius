@@ -1,9 +1,10 @@
-function [hx, trP, euler] = Run_SRUKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler) %#codegen
-% Run_SRUKF_Lie Executes the Square-Root Unscented Kalman Filter on Lie Groups (SRUKF-Lie).
+function [hx, trP, euler] = Run_SPSRUKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler) %#codegen
+% Run_SPSRUKF_Lie Executes the Single-Propagation Square-Root Unscented Kalman Filter on Lie Groups (SPSRUKF-Lie).
 % Standardized 18-input, 3-output signature.
 % Propagates lower-triangular Cholesky factor S (P = S * S') directly.
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (40), ..., (51)
 % Reference: Rudolph van der Merwe & Eric A. Wan (ICASSP 2001), Eqs. (16), ..., (29)
+% Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (20), ..., (38)
 
 gps_idx = 2;
 CenT = Cen';
@@ -22,13 +23,13 @@ for k = 1:N-1
     dt = time(k+1) - time(k);
 
     %% 1. Time Update (Prediction) - Eqs. (17) - (21)
-    [g_pred, S_pred, G_pred, Chi_R] = Prediction_SRUKF_Lie(hx(:, :, k), S_curr, S_qq, S_rr, u(:, k), alpha, beta, kappa, L, dt);
+    [g_pred, S_pred, xi_state, Chi_R, Wm, Wc] = Prediction_SPSRUKF_Lie(hx(:, :, k), S_curr, S_qq, S_rr, u(:, k), alpha, beta, kappa, L, dt);
     hx(:, :, k+1) = g_pred;
     S_curr = S_pred;
 
     %% 2. Measurement Update (Correction) - Eqs. (22) - (29)
     if (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2)
-        [g_upd, S_upd] = Update_SRUKF_Lie(g_pred, S_curr, S_rr, y(:, gps_idx), G_pred, Chi_R, alpha, beta, kappa, leverarm, L);
+        [g_upd, S_upd] = Update_SPSRUKF_Lie(g_pred, S_curr, y(:, gps_idx), xi_state, Chi_R, Wm, Wc, alpha, leverarm, L);
         hx(:, :, k+1) = g_upd;
         S_curr = S_upd;
         gps_idx = gps_idx + 1;
@@ -40,7 +41,7 @@ for k = 1:N-1
     euler(:, k+1) = Euler_Deg_From_Rotm(CenT * hx(1:3, 1:3, k+1));
 
     if ~mod(k, log_interval)
-        fprintf('running the SRUKF-Lie... %.1f%%\n', 100 * k / N);
+        fprintf('running the SPSRUKF-Lie... %.1f%%\n', 100 * k / N);
     end
 end
 

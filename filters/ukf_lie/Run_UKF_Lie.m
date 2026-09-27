@@ -13,13 +13,13 @@ for k = 1:N-1
     dt = time(k+1) - time(k);
     
     %% 1. Time Update (Prediction)
-    [g_pred, P_pred, G_pred, Chi_R] = Prediction_UKF_Lie(hx(:, :, k), P_curr, Pqq, Prr, u(:, k), alpha, beta, kappa, L, dt);
+    [g_pred, P_pred, G_pred, Chi_R, Wm, Wc] = Prediction_UKF_Lie(hx(:, :, k), P_curr, Pqq, Prr, u(:, k), alpha, beta, kappa, L, dt);
     hx(:, :, k+1) = g_pred;
     P_curr = P_pred;
     
     %% 2. Measurement Update (Correction)
     if (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2)
-        [g_upd, P_upd] = Update_UKF_Lie(g_pred, P_curr, Prr, y(:, gps_idx), G_pred, Chi_R, alpha, beta, kappa, leverarm, L);
+        [g_upd, P_upd] = Update_UKF_Lie(g_pred, P_curr, y(:, gps_idx), G_pred, Chi_R, Wm, Wc, alpha, leverarm, L);
         hx(:, :, k+1) = g_upd;
         P_curr = P_upd;
         gps_idx = gps_idx + 1;
