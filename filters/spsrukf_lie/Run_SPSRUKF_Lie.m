@@ -4,7 +4,7 @@ function [hx, trP, euler] = Run_SPSRUKF_Lie(N, time, gps_time, hx, trP, P, Pqq, 
 % Propagates lower-triangular Cholesky factor S (P = S * S') directly.
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (40), ..., (51)
 % Reference: Rudolph van der Merwe & Eric A. Wan (ICASSP 2001), Eqs. (16), ..., (29)
-% Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (20), ..., (38)
+% Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (20), ..., (38), (57)
 
 gps_idx = 2;
 CenT = Cen';
@@ -22,13 +22,19 @@ S_rr   = chol(Prr_sym, 'lower');  % 3 x 3 measurement noise Cholesky factor sqrt
 for k = 1:N-1
     dt = time(k+1) - time(k);
 
+    % Check whether a 1 Hz GNSS measurement arrives at time(k+1) before prediction.
+    % Full 67-column sigma points xi_state and Chi_R are only needed at GNSS update
+    % steps. Passing has_meas allows Prediction_SPSRUKF_Lie to propagate S_pred via a compact
+    % 30 x 15 QR on the 199 non-GNSS IMU steps (matching Biswas et al. 2017, Eq. 57).
+    has_meas = (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2);
+
     %% 1. Time Update (Prediction) - Eqs. (17) - (21)
-    [g_pred, S_pred, xi_state, Chi_R, Wm, Wc] = Prediction_SPSRUKF_Lie(hx(:, :, k), S_curr, S_qq, S_rr, u(:, k), alpha, beta, kappa, L, dt);
+    [g_pred, S_pred, xi_state, Chi_R, Wm, Wc] = Prediction_SPSRUKF_Lie(hx(:, :, k), S_curr, S_qq, S_rr, u(:, k), alpha, beta, kappa, L, dt, has_meas);
     hx(:, :, k+1) = g_pred;
     S_curr = S_pred;
 
     %% 2. Measurement Update (Correction) - Eqs. (22) - (29)
-    if (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2)
+    if has_meas
         [g_upd, S_upd] = Update_SPSRUKF_Lie(g_pred, S_curr, y(:, gps_idx), xi_state, Chi_R, Wm, Wc, alpha, leverarm, L);
         hx(:, :, k+1) = g_upd;
         S_curr = S_upd;

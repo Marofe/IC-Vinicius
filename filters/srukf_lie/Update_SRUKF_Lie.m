@@ -2,6 +2,7 @@ function [g_upd, S_upd] = Update_SRUKF_Lie(g_pred, S_pred, y, G_pred, Chi_R, Wm,
 %% Update_SRUKF_Lie Measurement update (correction) step on Lie Groups
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (45), ..., (51)
 % Reference: Rudolph van der Merwe & Eric A. Wan (ICASSP 2001), Eqs. (24), ..., (29)
+% Reference: Guillaume Bourmaud et al. (EUSIPCO 2013), Eq. (20)
 
 n2L1 = 2 * L + 1;
 
@@ -50,13 +51,23 @@ innov_y = y - h_pred(1:3, 4);
 K = (Pgh / S_yy') / S_yy;
 xi_upd = K * innov_y;
 
-%% 7. Posterior Cholesky Factor Downdate (Eqs. 28 & 29)
+%% 7. Posterior Cholesky Factor Downdate & Tangent-Space Reset (Eqs. 28 & 29; Bourmaud et al. 2013)
 U = K * S_yy;                                             % 15 x 3
 R_upd = S_pred';                                          % 15 x 15 upper-triangular
 for j = 1:size(U, 2)
     R_upd = cholupdate(R_upd, U(:, j), '-');
 end
 S_upd = R_upd';                                           % 15 x 15 lower-triangular
+
+% Apply the Bourmaud (2013) left-Jacobian covariance reset Phi_SE23T6(xi_upd)
+% in square-root form via QR triangularization so S_upd * S_upd' = Phi_upd * P_upd * Phi_upd'.
+% After retracting g_upd = g_pred * Exp(xi_upd), the downdated factor S_upd is
+% still expressed in the tangent space of g_pred. Transforming S_upd by Phi_SE23T6(xi_upd)
+% and re-triangularizing via QR parallel-transports the square-root covariance into the
+% tangent space of g_upd.
+Phi_upd = Phi_SE23T6(xi_upd);
+[~, R_reset] = qr((Phi_upd * S_upd)', 0);
+S_upd = R_reset(1:15, 1:15)';
 
 %% 8. State Update via Lie Retraction (Eq. 51)
 g_upd = g_pred * Exp_Multi_SE23T6(xi_upd);

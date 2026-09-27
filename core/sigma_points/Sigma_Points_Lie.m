@@ -15,19 +15,19 @@ Prr_sym    = 0.5 * (Prr + Prr.');
 [S_prev, flag1] = chol(P_prev_sym, 'lower');
 if flag1 ~= 0
     minEig = min(real(eig(P_prev_sym)));
-    S_prev = chol(P_prev_sym + eye(p15) * abs(minEig * 2 + 1e-14), 'lower');
+    S_prev = chol(P_prev_sym + eye(p15) * (2 * abs(minEig) + 1e-12), 'lower');
 end
 
 [S_qq, flag2] = chol(Pqq_sym, 'lower');
 if flag2 ~= 0
     minEig = min(real(eig(Pqq_sym)));
-    S_qq   = chol(Pqq_sym + eye(pqq) * abs(minEig * 2 + 1e-14), 'lower');
+    S_qq   = chol(Pqq_sym + eye(pqq) * (2 * abs(minEig) + 1e-12), 'lower');
 end
 
 [S_rr, flag3] = chol(Prr_sym, 'lower');
 if flag3 ~= 0
     minEig = min(real(eig(Prr_sym)));
-    S_rr   = chol(Prr_sym + eye(prr) * abs(minEig * 2 + 1e-14), 'lower');
+    S_rr   = chol(Prr_sym + eye(prr) * (2 * abs(minEig) + 1e-12), 'lower');
 end
 
 Sk = zeros(L, L);

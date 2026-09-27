@@ -3,6 +3,7 @@ function [g_upd, S_upd] = Update_SPSRUKF_Lie(g_pred, S_pred, y, xi_state, Chi_R,
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (45), ..., (51)
 % Reference: Rudolph van der Merwe & Eric A. Wan (ICASSP 2001), Eqs. (24), ..., (29)
 % Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (31), ..., (38)
+% Reference: Alexis Bourmaud et al. (ECC 2013), Eq. (20)
 % "The steps for measurement prediction, Kalman gain computation, the mean
 % state vector and the error covariance calculation is same as the UKF."
 % Biswas et al. on the SPUKF algorithm
@@ -49,13 +50,23 @@ innov_y = y - h_pred(1:3, 4);
 K = (Pgh / S_yy') / S_yy;
 xi_upd = K * innov_y;
 
-%% 6. Posterior Cholesky Factor Downdate (Eqs. 28 & 29)
+%% 6. Posterior Cholesky Factor Downdate & Tangent-Space Reset (Eqs. 28 & 29; Bourmaud et al. 2013)
 U = K * S_yy;                                             % 15 x 3
 R_upd = S_pred';                                          % 15 x 15 upper-triangular
 for j = 1:size(U, 2)
     R_upd = cholupdate(R_upd, U(:, j), '-');
 end
 S_upd = R_upd';                                           % 15 x 15 lower-triangular
+
+% Apply the Bourmaud (2013) left-Jacobian covariance reset Phi_SE23T6(xi_upd)
+% in square-root form via QR triangularization so S_upd * S_upd' = Phi_upd * P_upd * Phi_upd'.
+% After retracting g_upd = g_pred * Exp(xi_upd), the downdated factor S_upd is
+% still expressed in the tangent space of g_pred. Transforming S_upd by Phi_SE23T6(xi_upd)
+% and re-triangularizing via QR parallel-transports the square-root covariance into the
+% tangent space of g_upd, matching Update_EKF_Lie and eliminating the attitude RMSE drift.
+Phi_upd = Phi_SE23T6(xi_upd);
+[~, R_reset] = qr((Phi_upd * S_upd)', 0);
+S_upd = R_reset(1:15, 1:15)';
 
 %% 7. State Update via Lie Retraction (Eq. 51)
 g_upd = g_pred * Exp_Multi_SE23T6(xi_upd);
