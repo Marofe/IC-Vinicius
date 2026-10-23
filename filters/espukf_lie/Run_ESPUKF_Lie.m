@@ -1,8 +1,10 @@
 function [hx, trP, euler] = Run_ESPUKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler) %#codegen
 % Run_ESPUKF_Lie Executes the Extrapolated Single-Propagation Unscented Kalman Filter on Lie Groups (ESPUKF-Lie).
 % Standardized 18-input, 3-output signature.
-% Uses Multi-Dimensional Richardson Extrapolation (Biswas et al. 2017, Section III-B, Eqs. 39-43)
-% combined with 2nd-order Baker-Campbell-Hausdorff (BCH) tangent composition on SE_2(3) x T(6).
+% Uses a hand-derived adaptation of the multi-dimensional Richardson extrapolation of
+% Biswas et al. 2017 (Section III-B, Eqs. 39-43), combined with a 2nd-order
+% Baker-Campbell-Hausdorff (BCH) tangent composition on SE_2(3) x T(6).
+% Accuracy vs the full UKF-Lie propagation: see tests/Test_ESPUKF_Propagation.m.
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (40), ..., (51)
 % Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (39), ..., (43), (57)
 

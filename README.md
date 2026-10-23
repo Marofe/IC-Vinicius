@@ -116,6 +116,8 @@ IC-Vinicius/
 │   ├── Build_SPSRUKF_Lie_MEX.m
 │   ├── Build_ESPUKF_Lie_MEX.m
 │   └── Check_MEX_Dependencies.m
+├── tests/                         # Standalone verification scripts
+│   └── Test_ESPUKF_Propagation.m  # SPUKF/ESPUKF sigma-point accuracy vs full UKF-Lie propagation
 ├── inslib/                        # Legacy navigation archive
 │   ├── addLibrary.m               # Backwards-compatible legacy path loader
 │   └── legacy/                    # Quarantined Euler/quaternion routines and aliases

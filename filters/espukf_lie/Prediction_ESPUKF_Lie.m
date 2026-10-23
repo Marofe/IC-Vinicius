@@ -1,7 +1,8 @@
 function [g_pred, P_pred, xi_state, Chi_R, Wm, Wc] = Prediction_ESPUKF_Lie(g_prev, P_prev, Pqq, Prr, u, alpha, beta, kappa, L, dt, has_meas) %#codegen
 %% PREDICTION_ESPUKF_LIE Extrapolated Single-Propagation UKF time update on Lie Groups
-% Implements Biswas et al. (IEEE TAC 2017) Section III-B, Eqs. (39)-(43)
-% (Multi-Dimensional Richardson Extrapolation) adapted to the matrix Lie group G = SE_2(3) x T(6).
+% Hand-derived adaptation of the multi-dimensional Richardson extrapolation of Biswas et al.
+% (IEEE TAC 2017) Section III-B, Eqs. (39)-(43), to the matrix Lie group G = SE_2(3) x T(6).
+% It is not a direct transcription of those equations.
 %
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (40), ..., (44)
 % Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (39), ..., (43), (57)
@@ -23,24 +24,28 @@ Phi          = Phi_SE23T6(omegk);
 C_pred       = Matrix_C_SE23T6(g_pred_0, u, gn, Cen, dt);
 F            = Ad_neg_omegk + Phi * C_pred;
 
-%% 3. Multi-Dimensional Richardson Extrapolation & 2nd-Order BCH (Biswas et al. 2017, Eqs. 39-43)
-% Recover 2nd-order nonlinear Taylor terms without computing a Hessian tensor.
+%% 3. Richardson-Style 2nd-Order Correction & 2nd-Order BCH (adapted from Biswas et al. 2017, Eqs. 39-43)
+% Approximates 2nd-order terms of the sigma-point propagation without a Hessian tensor.
 % For each state-perturbation sigma point Chi_E(:, i):
 %   - N_1(Chi_E) uses the base Jacobian C_0 = Matrix_C_SE23T6(g_prev, u, gn, Cen, dt).
 %   - N_2(Chi_E / 2) evaluates the midpoint Jacobian C_mid at g_mid = g_prev * Exp(0.5 * Chi_E)
-%     together with the 2nd-order SE_2(3) right-Jacobian velocity-position coupling.
-%   - Richardson extrapolation (2 * N_2(Chi_E / 2) - N_1(Chi_E)) isolates the 2nd-order
-%     directional derivative (C_mid - C_0) * Chi_E - 0.5 * (phi x rho_v * dt).
-%   - Combining the extrapolated tangent increment with the 2nd-order Baker-Campbell-Hausdorff
-%     (BCH) Lie bracket 0.5 * Adj_G(A_i) * B_i matches exact nonlinear manifold propagation
-%     to machine precision (~1e-15).
+%     together with a 2nd-order velocity-position coupling term -0.5 * (phi x rho_v * dt).
+%   - The correction (C_mid - C_0) * Chi_E - 0.5 * (phi x rho_v * dt) is added to the 1st-order
+%     mapping, together with the 2nd-order Baker-Campbell-Hausdorff (BCH) term 0.5 * Adj_G(A_i) * B_i.
 %
-% Because symmetric sigma points (+/- eta * S)
-% have even 2nd-order perturbations d2(-Chi) = +d2(+Chi) and odd 1st-order perturbations
-% xi_1(-Chi) = -xi_1(+Chi), the linear-by-quadratic cross-terms in the covariance outer product
-% cancel identically and the purely quadratic covariance term is O(1e-17) < eps. Thus, on the
-% 199 non-GNSS IMU steps where xi_state and Chi_R are not consumed by Update_ESPUKF_Lie,
-% analytical covariance propagation remains exact to machine precision (Biswas et al. Eq. 57).
+% Measured accuracy (tests/Test_ESPUKF_Propagation.m, rectangular trajectory, one measurement
+% step; max abs error over sigma points vs the full UKF-Lie propagation re-expressed at g_pred_0):
+%   - after 30 GNSS updates: attitude 8.7e-15 rad (SPUKF, 1st order) -> 1.6e-19 rad (ESPUKF);
+%     velocity 1.4e-11 -> 1.0e-11 m/s; position 5.1e-12 -> 3.2e-11 m (larger than SPUKF).
+%   - first IMU step (P0): identical to SPUKF in every block (attitude 4.1e-20 rad,
+%     velocity 7.6e-12 m/s, position 5.2e-10 m).
+% The correction therefore removes the attitude error but not the velocity/position error.
+%
+% On steps without a GNSS fix, xi_state and Chi_R are not consumed by Update_ESPUKF_Lie, so
+% P_pred is propagated analytically as F * P_prev * F' + Phi * Pqq * Phi' (the 1st-order form,
+% as in SPUKF; Biswas et al. Eq. 57). The same test measures the relative Frobenius difference
+% between this analytical P_pred and the ESPUKF sigma-point P_pred as 1.8e-11 (first step)
+% and 4.9e-13 (after 30 GNSS updates).
 if has_meas
     [Chi, Wm, Wc] = Sigma_Points_Lie(alpha, beta, kappa, P_prev, Pqq, Prr, L);
 
