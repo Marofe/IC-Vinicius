@@ -24,7 +24,9 @@ h_pred = Frechet_Mean_H(Wm, H_pred, alpha, L);
 %% 3. Tangent Residuals in Lie Algebra of H and QR Innovation Factor (Eqs. 24 & 25)
 xi_meas = reshape(H_pred(1:3, 4, :), 3, n2L1) - h_pred(1:3, 4);
 
-% Eq. 24: QR of weighted measurement residuals (2:2L+1)
+% Eq. 24: QR of weighted measurement residuals (2:2L+1).
+% S_rr is not appended to the QR (unlike the non-augmented SRUKF, Eq. 24): measurement noise
+% is already carried by the augmented Chi_R sigma points, so appending it would double-count it.
 compound_meas = sqrt(Wc(2)) * xi_meas(:, 2:end);   % 3 x 2L
 [~, R_qr] = qr(compound_meas', 0);
 R_yy = R_qr(1:3, 1:3);                                    % 3 x 3 upper-triangular

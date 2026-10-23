@@ -51,7 +51,9 @@ if has_meas
 
     xi_state = F * Chi_E + Phi * Chi_Q;           % 15 x (2L + 1)
 
-    % Eq. 20: QR of weighted sigma point residuals (2:2L+1)
+    % Eq. 20: QR of weighted sigma point residuals (2:2L+1).
+    % S_qq is not appended to the QR (unlike the non-augmented SRUKF, Eq. 20): process noise
+    % is already carried by the augmented Chi_Q sigma points, so appending it would double-count it.
     compound_state = sqrt(Wc(2)) * xi_state(:, 2:end); % 15 x 2L
     [~, R_qr] = qr(compound_state', 0);
     R_pred = R_qr(1:15, 1:15);                         % 15 x 15 upper-triangular

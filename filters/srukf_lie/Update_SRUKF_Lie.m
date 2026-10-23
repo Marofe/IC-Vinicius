@@ -25,8 +25,10 @@ for k = 1:n2L1
     xi_state(:, k) = Log_Multi_SE23T6(Ug \ (Lg \ (Pg * G_pred(:, :, k))));
 end
 
-% Eq. 24: QR of weighted measurement residuals (2:2L+1) and meas. noise factor S_rr
-compound_meas = sqrt(Wc(2)) * xi_meas(:, 2:end);   % 3 x (2L + 3)
+% Eq. 24: QR of weighted measurement residuals (2:2L+1).
+% S_rr is not appended to the QR (unlike the non-augmented SRUKF, Eq. 24): measurement noise
+% is already carried by the augmented Chi_R sigma points, so appending it would double-count it.
+compound_meas = sqrt(Wc(2)) * xi_meas(:, 2:end);   % 3 x 2L
 [~, R_qr] = qr(compound_meas', 0);
 R_yy = R_qr(1:3, 1:3);                                    % 3 x 3 upper-triangular
 

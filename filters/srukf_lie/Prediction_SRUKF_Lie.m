@@ -61,8 +61,10 @@ for k = 1:n2L1
     xi_state(:, k) = Log_Multi_SE23T6(Ug \ (Lg \ (Pg * G_pred(:, :, k))));
 end
 
-% Eq. 20: QR of weighted sigma point residuals (2:2L+1) and process noise factor S_qq
-compound_state = sqrt(Wc(2)) * xi_state(:, 2:end); % 15 x (2L + 15)
+% Eq. 20: QR of weighted sigma point residuals (2:2L+1).
+% S_qq is not appended to the QR (unlike the non-augmented SRUKF, Eq. 20): process noise
+% is already carried by the augmented Chi_Q sigma points, so appending it would double-count it.
+compound_state = sqrt(Wc(2)) * xi_state(:, 2:end); % 15 x 2L
 [~, R_qr] = qr(compound_state', 0);
 R_pred = R_qr(1:15, 1:15);                                % R_pred is 15 x 15 upper-triangular
 
