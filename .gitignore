@@ -1,6 +1,8 @@
 # WORKSPACE OUTPUTS & RUNTIME DATA
 Workspaces/
 *.mat
+# Datasets under data/ are tracked; keep new ones from being silently ignored
+!data/**/*.mat
 *.asv
 
 # MATLAB CODER & MEX BUILD ARTIFACTS
