@@ -19,9 +19,14 @@
 %        enable_plots    = false;   % true: show diagnostic plots | false: headless/batch
 %        enable_profiler = false;   % true: run MATLAB profiler | false (default)
 %        force_rebuild   = false;   % true: force MEX recompile | false (default)
+%        reset_results   = false;   % true: discard stored benchmark_results.mat entries first
 %        benchmark_filters
+%
+%   Each stored result is tagged with when it ran, the runner mode (MEX / .m), the code
+%   revision and a hash of Default_Filter_Config, so rows from older runs can be told apart
+%   in the summary table.
 
-clearvars -except traj_choice filt_choice use_mex enable_plots enable_profiler force_rebuild;
+clearvars -except traj_choice filt_choice use_mex enable_plots enable_profiler force_rebuild reset_results;
 
 rootDir = fileparts(mfilename('fullpath'));
 if isempty(rootDir)
@@ -148,6 +153,9 @@ end
 if ~exist('force_rebuild', 'var') || isempty(force_rebuild)
     force_rebuild = false;
 end
+if ~exist('reset_results', 'var') || isempty(reset_results)
+    reset_results = false;
+end
 if ~exist('enable_plots', 'var') || isempty(enable_plots)
     if is_interactive
         default_plot = 'n';
@@ -187,7 +195,10 @@ end
 
 %% 3. Load / Initialize Safe Results Database
 resultsFile = fullfile(rootDir, 'benchmark_results.mat');
-if isfile(resultsFile)
+if reset_results
+    results = struct();
+    fprintf('reset_results = true: ignoring previously stored benchmark results.\n');
+elseif isfile(resultsFile)
     old_data = load(resultsFile);
     if isfield(old_data, 'results')
         results = old_data.results;
@@ -205,6 +216,12 @@ end
 
 %% 4. Unified Filter Execution Loop
 cfg = Default_Filter_Config();
+
+% Run metadata stored with every result entry (see the summary table)
+run_info.timestamp = char(datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss'));
+run_info.mode      = ternary_str(use_mex, 'MEX', '.m');
+run_info.cfg_hash  = Config_Hash(cfg);
+run_info.code_rev  = Code_Revision(rootDir);
 
 for t = 1:numel(trajectories)
     trajectory = trajectories{t};
@@ -319,6 +336,7 @@ for t = 1:numel(trajectories)
         results.(trajectory).(fName).att_rmse_3d        = norm(angles_rmse);
         results.(trajectory).(fName).execTime           = elapsed_time;
         results.(trajectory).(fName).perStepTime        = perStepTime;
+        results.(trajectory).(fName).run_info           = run_info;
         
         fprintf('Finished %s in %.4f seconds. Combined RMSE: %.4f\n', fName, elapsed_time, rmse_calc);
         fprintf('  Per Step Time: %.6f seconds\n', perStepTime);
@@ -341,26 +359,78 @@ for t = 1:numel(trajectories)
     if ~isfield(results, trajectory) || isempty(fieldnames(results.(trajectory)))
         continue;
     end
-    line_len   = 92;
+    line_len   = 140;
     title_text = sprintf(' BENCHMARK RESULTS: %s ', upper(trajectory));
-    fprintf('\n\n%s\n', pad(title_text, line_len, 'both', '='));    
-    fprintf('%-12s | %-10s | %-10s | %-10s | %-10s | %-7s | %-10s\n', ...
-        'Filter', 'Tot RMSE', 'Pos(m) RMSE', 'Vel(m/s) RMSE', 'Att(deg) RMSE', 'Time(s)', 'Step(us)');
-    fprintf('----------------------------------------------------------------------------------------\n');
-    
+    fprintf('\n\n%s\n', pad(title_text, line_len, 'both', '='));
+    fprintf('%-1s %-12s | %-10s | %-10s | %-10s | %-10s | %-7s | %-10s | %-4s | %-8s | %-8s | %-19s\n', ...
+        '', 'Filter', 'Tot RMSE', 'Pos(m) RMSE', 'Vel(m/s) RMSE', 'Att(deg) RMSE', 'Time(s)', 'Step(us)', ...
+        'Mode', 'Rev', 'Cfg', 'Run at');
+    fprintf('%s\n', repmat('-', 1, line_len));
+
     fields = fieldnames(results.(trajectory));
     for i = 1:numel(fields)
         fName = fields{i};
         res = results.(trajectory).(fName);
-        fprintf('%-12s | %10.4f | %11.4f | %13.4f | %13.4f | %7.3f | %8.2f\n', ...
-            fName, res.rmse_total, res.pos_rmse_3d, res.vel_rmse_3d, res.att_rmse_3d, ...
-            res.execTime, res.perStepTime * 1e6);
+        if isfield(res, 'run_info')
+            ri = res.run_info;
+        else
+            ri = struct('timestamp', '?', 'mode', '?', 'cfg_hash', '?', 'code_rev', '?');
+        end
+        marker = Stale_Marker(res, run_info);
+        fprintf('%-1s %-12s | %10.4f | %11.4f | %13.4f | %13.4f | %7.3f | %8.2f | %-4s | %-8s | %-8s | %-19s\n', ...
+            marker, fName, res.rmse_total, res.pos_rmse_3d, res.vel_rmse_3d, res.att_rmse_3d, ...
+            res.execTime, res.perStepTime * 1e6, ri.mode, ri.code_rev, ri.cfg_hash, ri.timestamp);
     end
     fprintf('%s\n', repmat('=', 1, line_len));
+    fprintf(['Row flags: '' '' this run | ''~'' earlier run, same code and config | ' ...
+             '''*'' different code/config or uncommitted code | ''?'' untagged (older format)\n']);
 end
 
 % Clean up temporary selection variables from workspace so subsequent runs prompt cleanly
 clear traj_choice filt_choice plot_choice is_interactive;
+
+function marker = Stale_Marker(res, run_info)
+% STALE_MARKER One-character flag printed in front of each summary-table row.
+%   res      - stored result entry; res.run_info is missing for entries saved before tagging
+%   run_info - metadata of the current invocation (timestamp, mode, cfg_hash, code_rev)
+%   ' ' ran in this invocation
+%   '~' earlier run with the same code revision and filter configuration
+%   '*' different code revision or configuration, or code with uncommitted changes ('+')
+%   '?' saved before results were tagged (no run_info)
+if ~isfield(res, 'run_info')
+    marker = '?';
+elseif strcmp(res.run_info.timestamp, run_info.timestamp)
+    marker = ' ';
+elseif ~strcmp(res.run_info.cfg_hash, run_info.cfg_hash) ...
+        || ~strcmp(res.run_info.code_rev, run_info.code_rev) ...
+        || endsWith(res.run_info.code_rev, '+')
+    marker = '*';
+else
+    marker = '~';
+end
+end
+
+function h = Config_Hash(cfg)
+% CONFIG_HASH Short MD5 fingerprint (8 hex chars) of the filter configuration struct.
+bytes = getByteStreamFromArray(cfg);
+md = java.security.MessageDigest.getInstance('MD5');
+digest = typecast(md.digest(bytes), 'uint8');
+h = lower(reshape(dec2hex(digest(1:4))', 1, []));
+end
+
+function rev = Code_Revision(rootDir)
+% CODE_REVISION Short git commit of the repository, with '+' if tracked files have local changes.
+[st, out] = system(sprintf('git -C "%s" rev-parse --short HEAD', rootDir));
+if st ~= 0
+    rev = 'n/a';
+    return;
+end
+rev = strtrim(out);
+[st, out] = system(sprintf('git -C "%s" status --porcelain --untracked-files=no', rootDir));
+if st == 0 && ~isempty(strtrim(out))
+    rev = [rev '+'];
+end
+end
 
 function out = ternary_str(cond, strTrue, strFalse)
     if cond

@@ -148,6 +148,7 @@ traj_choice  = '1 2';         % 1: rectangular, 2: circular, 3: helicoidal, 4: a
 filt_choice  = '1 2 3 4 5 6'; % 1: EKF_Lie, 2: UKF_Lie, 3: SRUKF_Lie, 4: SPUKF_Lie, 5: SPSRUKF_Lie, 6: ESPUKF_Lie, 7: all
 use_mex      = true;          % true: compiled MEX | false: pure MATLAB .m
 enable_plots = false;         % true: show diagnostic plots
+reset_results = false;        % true: drop previously stored rows from benchmark_results.mat
 benchmark_filters;
 ```
 
