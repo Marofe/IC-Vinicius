@@ -58,10 +58,9 @@ IC-Vinicius/
 │   │   ├── Bracket_Up_SE23.m
 │   │   ├── Matrix_C_SE23T6.m
 │   │   └── Matrix_H_SE23T6.m
-│   ├── manifold/                  # Manifold Fréchet means and covariance computations
+│   ├── manifold/                  # Manifold Fréchet means
 │   │   ├── Frechet_Mean_G.m       # Iterative Fréchet mean on state group G
-│   │   ├── Frechet_Mean_H.m       # Fréchet mean on measurement group H (T(3))
-│   │   └── Lie_Covariances.m      # Innovation Phh and cross-covariance Pgh
+│   │   └── Frechet_Mean_H.m       # Fréchet mean on measurement group H (T(3))
 │   ├── sigma_points/              # Augmented sigma points generation
 │   │   └── Sigma_Points_Lie.m
 │   └── rotation/                  # Attitude DCM and Euler angle conversions
