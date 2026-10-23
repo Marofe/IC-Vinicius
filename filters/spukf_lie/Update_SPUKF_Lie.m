@@ -2,7 +2,6 @@ function [g_upd, P_upd] = Update_SPUKF_Lie(g_pred, P_pred, y, xi_state, Chi_R, W
 %% Update_SPUKF_Lie Measurement update (correction) step on Lie Groups
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (45), ..., (51)
 % Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (31), ..., (38)
-% Reference: Alexis Bourmaud et al. (ECC 2013), Eq. (20)
 % "The steps for measurement prediction, Kalman gain computation, the mean
 % state vector and the error covariance calculation is same as the UKF."
 % Biswas et al. on the SPUKF algorithm
@@ -35,17 +34,8 @@ innov_y = y - h_pred(1:3, 4);
 K      = (Phh \ Pgh')';
 xi_upd = K * innov_y;
 
-%% 6. Covariance Update and Tangent-Space Reset (Eq. 50; Bourmaud et al. 2013, Eq. 20)
+%% 6. Covariance Update (Eq. 50)
 P_upd = P_pred - K * Pgh';
-
-% Apply the Bourmaud (2013) left-Jacobian covariance reset Phi_SE23T6(xi_upd).
-% After retracting the state via g_upd = g_pred * Exp(xi_upd), the updated
-% error covariance P_upd = P_pred - K * Pgh' is still expressed in the tangent space
-% of the prior mean g_pred. Sandwiching P_upd with Phi_SE23T6(xi_upd) parallel-transports
-% the covariance into the tangent space of the new posterior mean g_upd, matching
-% Update_EKF_Lie and eliminating the tangent-frame misalignment RMSE drift.
-Phi_upd = Phi_SE23T6(xi_upd);
-P_upd   = Phi_upd * P_upd * Phi_upd';
 P_upd   = 0.5 * (P_upd + P_upd');
 
 %% 7. State Update via Lie Retraction (Eq. 51)
