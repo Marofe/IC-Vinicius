@@ -23,9 +23,9 @@ for k = 1:N-1
     dt = time(k+1) - time(k);
 
     % Check whether a 1 Hz GNSS measurement arrives at time(k+1) before prediction.
-    % Full 67-column sigma points xi_state and Chi_R are only needed at GNSS update
+    % The full (2L + 1)-column sigma points xi_state and Chi_R are only needed at GNSS update
     % steps. Passing has_meas allows Prediction_SPSRUKF_Lie to propagate S_pred via a compact
-    % 30 x 15 QR on the 199 non-GNSS IMU steps (matching Biswas et al. 2017, Eq. 57).
+    % 30 x 15 QR on IMU steps without a GNSS fix (matching Biswas et al. 2017, Eq. 57).
     has_meas = (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2);
 
     %% 1. Time Update (Prediction) - Eqs. (17) - (21)

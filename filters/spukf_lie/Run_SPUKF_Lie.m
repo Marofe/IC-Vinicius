@@ -1,7 +1,7 @@
 function [hx, trP, euler] = Run_SPUKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler) %#codegen
 % Run_SPUKF_Lie Executes the Single-Propagation Unscented Kalman Filter on Lie Groups (SPUKF-Lie).
 % Standardized 18-input, 3-output signature.
-% Maintains a single 15x15 covariance matrix in memory to eliminate 108 MB allocation bloat.
+% Maintains a single 15x15 covariance matrix in memory instead of a 15x15xN history.
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (40), ..., (51)
 % Reference: Sanat K. Biswas et al. (IEEE TAC 2017), Eqs. (20), ..., (38), (57)
 
@@ -16,8 +16,8 @@ for k = 1:N-1
 
     % Check whether a 1 Hz GNSS measurement arrives at time(k+1) before prediction.
     % Sigma points xi_state and Chi_R are only consumed when Update_SPUKF_Lie runs.
-    % Passing has_meas allows Prediction_SPUKF_Lie to skip redundant 200 Hz Cholesky and
-    % 67-column matrix multiplications on the 199 non-GNSS IMU steps (Biswas et al. 2017, Eq. 57).
+    % Passing has_meas allows Prediction_SPUKF_Lie to skip the Cholesky factorization and
+    % (2L + 1)-column matrix products on IMU steps without a GNSS fix (Biswas et al. 2017, Eq. 57).
     has_meas = (gps_idx <= M) && (abs(time(k+1) - gps_time(gps_idx)) < dt / 2);
 
     %% 1. Time Update (Prediction)

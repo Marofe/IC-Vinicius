@@ -241,7 +241,7 @@ for t = 1:numel(trajectories)
                   [eye(3), ba0; zeros(1, 3), 1], ...
                   [eye(3), bg0; zeros(1, 3), 1]);
 
-    % Single 15x15 covariance initialization (eliminates 108 MB allocation)
+    % Single 15x15 covariance initialization (runners keep one 15x15 P, not a 15x15xN history)
     P0       = cfg.cov.P0;
     Pqq      = cfg.cov.Pqq;
     Prr      = cfg.cov.Prr;

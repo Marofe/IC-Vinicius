@@ -26,10 +26,11 @@ F   = Ad_G(Exp_Multi_SE23T6(-omegk)) + Phi * C; % Lie algebra mapped non-linear 
 % Generate and map the 2L + 1 sigma points only at measurement epochs (has_meas == true).
 % Because sqrt(Wc(2)) * eta = 1 / sqrt(2) and the positive and negative sigma-point
 % blocks [eta * Sk, -eta * Sk] contribute identically to the Gram matrix, the QR factor of
-% sqrt(Wc(2)) * xi_state(:, 2:end)' (66 x 15) is algebraically identical to the QR factor
-% of [F * S_prev, Phi * S_qq]' (30 x 15). On the 199 non-GNSS IMU steps where xi_state and
+% sqrt(Wc(2)) * xi_state(:, 2:end)' (2L x 15) is algebraically identical to the QR factor
+% of [F * S_prev, Phi * S_qq]' (30 x 15). On IMU steps without a GNSS fix, where xi_state and
 % Chi_R are not consumed by Update_SPSRUKF_Lie, computing the 30 x 15 QR directly avoids
-% assembling the 33 x 67 sigma-point matrix and 15 x 67 products (Biswas et al. 2017, Eq. 57).
+% assembling the L x (2L + 1) sigma-point matrix and its 15 x (2L + 1) products
+% (Biswas et al. 2017, Eq. 57).
 if has_meas
     % Measurement epoch: instantiate augmented sigma points and map to Lie algebra for Update_SPSRUKF_Lie
     lambda = (alpha^2) * (L + kappa) - L;

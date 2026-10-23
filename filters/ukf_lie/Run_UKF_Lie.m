@@ -1,7 +1,7 @@
 function [hx, trP, euler] = Run_UKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, alpha, beta, kappa, L, Cen, y, leverarm, M, euler) %#codegen
 % RUN_UKF_LIE Executes the Unscented Kalman Filter on Lie Groups (UKF-Lie).
 % Standardized 18-input, 3-output signature.
-% Maintains a single 15x15 covariance matrix in memory to eliminate 108 MB allocation bloat.
+% Maintains a single 15x15 covariance matrix in memory instead of a 15x15xN history.
 
 gps_idx = 2;
 CenT = Cen';

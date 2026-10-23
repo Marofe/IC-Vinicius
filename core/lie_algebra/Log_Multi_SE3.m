@@ -12,11 +12,10 @@ function [xi] = Log_Multi_SE3(chi) %#codegen
 %      phi in [1.49e-8, 1e-4] rad.
 %   2. Hard-zero truncation of small sigma-point rotations in UKF_Lie / SRUKF_Lie:
 %      Even when phi is small, phi_a = phi * a is non-zero. Setting phi_a = zeros(3, 1) violated
-%      the round-trip identity Log(Exp(xi)) = xi for small angles. In 200 Hz GNSS/INS filtering
-%      (dt = 0.005 s, alpha = 0.014), the attitude perturbation on the gyroscope-bias sigma points
-%      (||-dt * delta_bg|| ~ 4.3e-9 rad) and cross-correlated velocity/position/accel-bias sigma
-%      points (1.2e-11 to 1.25e-8 rad) is below 1.49e-8 rad, so the old branch zeroed out
-%      xi_state(1:3, i) on 24 of the 30 state-error sigma points at every prediction step.
+%      the round-trip identity Log(Exp(xi)) = xi for small angles. With ~200 Hz IMU steps and
+%      alpha = 0.014, the attitude part of several state-error sigma points (e.g. the gyro-bias
+%      points, whose rotation is ~dt * delta_bg) can fall below 1.49e-8 rad, so the old branch
+%      zeroed out xi_state(1:3, i) on those points.
 %   3. Fix Implementation:
 %      - Off-diagonal entries of C are added to 0.0 in Exp_Multi_SE3, so the skew-symmetric vector
 %        skew_vec = 0.5 * vee(C - C') = sin(phi) * a retains full 16-digit precision down to 1e-308.

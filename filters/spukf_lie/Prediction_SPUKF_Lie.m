@@ -27,8 +27,8 @@ F   = Ad_G(Exp_Multi_SE23T6(-omegk)) + Phi * C; % Lie algebra mapped non-linear 
 % In SPUKF, the linear tangent mapping xi_state = F * Chi_E + Phi * Chi_Q
 % yields a sample covariance sum_i Wc_i * xi_state_i * xi_state_i' that is algebraically
 % identical to the analytical Lyapunov propagation F * P_prev * F' + Phi * Pqq * Phi'.
-% During the 199 out of 200 IMU dead-reckoning steps where no 1 Hz GNSS measurement
-% arrives, xi_state and Chi_R are unused. Evaluating P_pred analytically on non-GNSS
+% On IMU dead-reckoning steps where no 1 Hz GNSS measurement arrives (most steps, since
+% the IMU runs at ~200 Hz), xi_state and Chi_R are unused. Evaluating P_pred analytically on non-GNSS
 % steps and instantiating sigma points only at GNSS epochs matches Biswas et al. (2017)
 % Eq. (57) without altering the prior covariance or sigma points at measurement updates.
 if has_meas

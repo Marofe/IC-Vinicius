@@ -1,7 +1,7 @@
 function [hx, trP, euler] = Run_EKF_Lie(N, time, gps_time, hx, trP, P, Pqq, Prr, u, Cen, y, leverarm, M, euler) %#codegen
 % RUN_EKF_LIE Executes the Extended Kalman Filter on Lie Groups (EKF-Lie).
 % Standardized 14-input, 3-output signature.
-% Maintains a single 15x15 covariance matrix in memory to eliminate 108 MB allocation bloat.
+% Maintains a single 15x15 covariance matrix in memory instead of a 15x15xN history.
 
 gps_idx = 2;
 CenT = Cen'; % Pre-transpose once for efficiency
