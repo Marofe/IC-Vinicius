@@ -54,10 +54,11 @@ if has_meas
     % Base-point Jacobian for Richardson extrapolation N_1(Chi_E)
     C_0 = Matrix_C_SE23T6(g_prev, u, gn, Cen, dt);
 
-    % Apply Richardson extrapolation + 2nd-order BCH on the 30 non-zero Chi_E columns
-    % (columns 2:16 correspond to +eta * S_prev; columns 35:49 correspond to -eta * S_prev)
-    state_cols = [2:16, 35:49];
-    for idx = 1:30
+    % Apply Richardson extrapolation + 2nd-order BCH on the 2p non-zero Chi_E columns
+    % (columns 2:1+p correspond to +eta * S_prev; columns L+2:L+1+p correspond to -eta * S_prev)
+    p = 15;
+    state_cols = [2:1+p, L+2:L+1+p];
+    for idx = 1:numel(state_cols)
         i = state_cols(idx);
         chi_e = Chi_E(:, i);
 
