@@ -1,6 +1,7 @@
 function [g_upd, P_upd] = Update_UKF_Lie(g_pred, P_pred, y, G_pred, Chi_R, Wm, Wc, alpha, leverarm, L) %#codegen
 %% Update_UKF_Lie Measurement update (correction) step on Lie Groups
 % Reference: Giorgio M. Magalhaes et al. (CBA 2018), Eqs. (45), ..., (51)
+% Reference: Guillaume Bourmaud et al. (EUSIPCO 2013), Eq. (20)
 
 p    = 15;
 n2L1 = 2 * L + 1;
@@ -36,8 +37,16 @@ innov_y = y - h_pred(1:3, 4);
 K      = (Phh \ Pgh')';
 xi_upd = K * innov_y;
 
-%% 7. Covariance Update (Eq. 50)
+%% 7. Covariance Update and Tangent-Space Reset (Eq. 50; Bourmaud et al. 2013, Eq. 20)
 P_upd = P_pred - K * Pgh';
+
+% Bourmaud et al. (2013) covariance reset with the right Jacobian J_r(xi_upd) = Phi_SE23T6(xi_upd).
+% P_upd = P_pred - K * Pgh' is the covariance of the error around the prior mean g_pred.
+% After the retraction g_upd = g_pred * Exp(xi_upd), the first-order identity
+% g_pred * Exp(xi_upd + d) ~= g_upd * Exp(J_r(xi_upd) * d) maps that error into the
+% tangent space of the posterior mean g_upd, so P_upd <- J_r * P_upd * J_r'.
+Phi_upd = Phi_SE23T6(xi_upd);
+P_upd   = Phi_upd * P_upd * Phi_upd';
 P_upd   = 0.5 * (P_upd + P_upd');
 
 %% 8. State Update via Lie Retraction (Eq. 51)
