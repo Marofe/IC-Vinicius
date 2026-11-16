@@ -243,14 +243,20 @@ for t = 1:numel(trajectories)
     N        = size(time, 1);
     M        = size(gps_time, 1);
 
-    % Precompute initial geometry and homogeneous state on SE_2(3) x R^6
-    p0   = data.gps_pe(1, :)';
-    v0   = [0; 0; 0];
+    % Precompute initial geometry and homogeneous state on SE_2(3) x R^6.
+    % The filter starts from the reference state at t = time(1), which is what
+    % cfg.cov.P0 assumes (1 mm position, 1 mrad attitude). The previous
+    % initialization used the first GNSS fix as IMU position (that is the
+    % antenna, one lever arm = 0.46 m away) and a body frame aligned with NED
+    % (2 to 4.5 deg away from the true attitude), both far outside P0.
+    p0   = ref.pe(1, :)';
+    v0   = ref.ve(1, :)';
     lla0 = Single_LLA_From_ECEF(p0);
     Cen  = DCM_ECEF_To_NED(lla0(1), lla0(2));
 
-    euler0 = Euler_Rad_From_Rotm(Cen', 'ZYX')';
-    Ceb_0  = Rotm_Euler_Rad(flip(euler0), 'ZYX')';
+    % ref.euler = [yaw pitch roll] (deg) of the NED->FRD attitude, so
+    % Rotm_Euler_Deg(...) is Cbn (navigation to body) and Ceb = Cen * Cbn'.
+    Ceb_0  = Cen * Rotm_Euler_Deg(ref.euler(1, :), 'ZYX')';
     ba0    = zeros(3, 1);
     bg0    = zeros(3, 1);
 
