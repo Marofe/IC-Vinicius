@@ -75,7 +75,7 @@ Cen0 = DCM_ECEF_To_NED(lla0(1), lla0(2));
 ref_euler_ned = Euler_ENU_To_NED(ref.euler)'; % 3 x N_ref [roll; pitch; yaw]
 ref_pe_T      = ref.pe';                      % 3 x N_ref
 lla_ref       = Single_LLA_From_ECEF(ref_pe_T);
-ref_pe_comp   = compensate_leverarm_vec(ref_pe_T, flip(ref_euler_ned, 1), lla_ref, lb);
+ref_pe_comp   = compensate_leverarm_vec(ref_pe_T, ref_euler_ned, lla_ref, lb);
 
 % Convert reference and GNSS from ECEF to local NED relative to p0
 ned_ref = Cen0' * (ref_pe_comp - p0);
@@ -137,7 +137,11 @@ grid on;
 end
 
 function pe_out = compensate_leverarm_vec(pe_in, euler_deg, lla, lb)
-% Vectorized evaluation of pe_out(:,k) = pe_in(:,k) + DCM_ECEF_To_NED(lat_k,lon_k) * Rotm_Euler_Deg(flip(euler(:,k)),'ZYX')' * lb
+% Vectorized evaluation of pe_out(:,k) = pe_in(:,k) + DCM_ECEF_To_NED(lat_k,lon_k) * Rotm_Euler_Deg(flip(euler(:,k)),'ZYX') * lb
+% euler_deg = [roll; pitch; yaw] as logged by the filters, i.e. extracted from
+% Cnb = Cen' * Ceb (body to navigation), same convention as Euler_ENU_To_NED(ref.euler).
+% Rotm_Euler_Deg(flip(euler)) therefore rebuilds Cnb itself, and the antenna
+% offset in NED is Cnb * lb (no transpose), matching the filters' h = p + Ceb * lb.
 roll  = euler_deg(1, :);
 pitch = euler_deg(2, :);
 yaw   = euler_deg(3, :);
@@ -146,7 +150,7 @@ cr = cosd(roll); sr = sind(roll);
 cp = cosd(pitch); sp = sind(pitch);
 cy = cosd(yaw); sy = sind(yaw);
 
-% Cbn rows (where Cnb = Cbn')
+% Cnb rows (body to navigation)
 C11 = cp .* cy;
 C12 = cp .* sy;
 C13 = -sp;
@@ -157,10 +161,10 @@ C31 =  sr .* sy + cr .* sp .* cy;
 C32 = -sr .* cy + cr .* sp .* sy;
 C33 =  cr .* cp;
 
-% v_ned = Cnb * lb = Cbn' * lb
-vn = C11 * lb(1) + C21 * lb(2) + C31 * lb(3);
-ve = C12 * lb(1) + C22 * lb(2) + C32 * lb(3);
-vd = C13 * lb(1) + C23 * lb(2) + C33 * lb(3);
+% v_ned = Cnb * lb
+vn = C11 * lb(1) + C12 * lb(2) + C13 * lb(3);
+ve = C21 * lb(1) + C22 * lb(2) + C23 * lb(3);
+vd = C31 * lb(1) + C32 * lb(2) + C33 * lb(3);
 
 % Cen * v_ned
 lat = lla(1, :);
