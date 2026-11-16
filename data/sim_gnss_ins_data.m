@@ -12,17 +12,22 @@ sigmaR=1e-2; %precisao do gps;
 sigmaW=1e-6; %precisao do giroscopio;
 sigmaA=1e-9; %precisa do acelerometro;
 %% simula GNSS+leverarm
-p0=ref.pe(1,:);
-lla0=SingleLlaFromEcef(p0); %local ref position (lat,lon,alt)
-Cen=DCM_en(lla0(1),lla0(2)); %from NED to ECEF
+p0=ref.pe(1,:)';
+lla0=Single_LLA_From_ECEF(p0); %local ref position (lat,lon,alt)
+Cen=DCM_ECEF_To_NED(lla0(1),lla0(2)); %from NED to ECEF
 leverarm=[0.040;-0.139;-0.439];
-euler=ref.euler(1:Fs:end,:); %ENU<->RFU
-euler=eulerdENU2NED(euler); %NED<->FRD
+% ref.euler = [yaw pitch roll] (deg) of the NED->FRD attitude, i.e. the
+% attitude that is consistent with ref.wib/ref.fib. It must go straight into
+% Rotm_Euler_Deg(...,'ZYX'), which returns Cbn (navigation to body).
+% Do NOT pass it through Euler_ENU_To_NED first: that function returns
+% [roll pitch yaw] extracted from Cbn' (the convention used by the attitude
+% metric and plots), so Rotm_Euler_Deg of its output is not Cbn.
+euler=ref.euler(1:Fs:end,:);
 gps_time=ref.time(1:Fs:end);
 gps_pe=ref.pe(1:Fs:end,:);
 for k=1:size(euler,1)
-    Cbn=rotmd(euler(k,:),'ZYX');
-    gps_pe(k,:)=gps_pe(k,:)+(Cen*Cbn'*leverarm)';
+    Cbn=Rotm_Euler_Deg(euler(k,:),'ZYX'); %from navigation (NED) to body (FRD)
+    gps_pe(k,:)=gps_pe(k,:)+(Cen*Cbn'*leverarm)'; %antenna = IMU + Ceb*leverarm
 end
 %% simulando ruido+bias
 ba=1e-6*randn(3,1);
