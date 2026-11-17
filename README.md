@@ -26,8 +26,6 @@ Instead of parametrizing attitude with Euler angles or quaternions in ℝⁿ, al
 | **UKF-Lie**     | Full augmented sigma-point filter with nonlinear Fréchet mean estimation (L = 33)                                   | 67           |
 | **SRUKF-Lie**   | Square-Root formulation on lower-triangular Cholesky factors, no explicit matrix inversion (L = 33)                 | 67           |
 | **SPUKF-Lie**   | Single-Propagation UKF on SE₂(3) × ℝ⁶ mapping augmented perturbations linearly in the Lie algebra (L = 33)          | 67           |
-| **SPSRUKF-Lie** | Single-Propagation Square-Root UKF combining central state propagation with QR/Cholesky updates on SE₂(3) × ℝ⁶      | 67           |
-| **ESPUKF-Lie**  | Extrapolated Single-Propagation UKF using Multi-Dimensional Richardson Extrapolation and 2nd-order BCH (L = 33)      | 67           |
 
 **References:**
 1. G. M. Magalhães, H. T. M. Kussaba, and J. Y. Ishihara, "Unscented Kalman filter on Lie groups for radar tracking," CBA, pp. 1–8, Sep. 2018.
@@ -82,18 +80,10 @@ IC-Vinicius/
 │   │   ├── Prediction_SPUKF_Lie.m
 │   │   ├── Run_SPUKF_Lie.m
 │   │   └── Update_SPUKF_Lie.m
-│   ├── espukf_lie/
-│   │   ├── Prediction_ESPUKF_Lie.m
-│   │   ├── Run_ESPUKF_Lie.m
-│   │   └── Update_ESPUKF_Lie.m
-│   ├── srukf_lie/
-│   │   ├── Prediction_SRUKF_Lie.m
-│   │   ├── Run_SRUKF_Lie.m
-│   │   └── Update_SRUKF_Lie.m
-│   └── spsrukf_lie/
-│       ├── Prediction_SPSRUKF_Lie.m
-│       ├── Run_SPSRUKF_Lie.m
-│       └── Update_SPSRUKF_Lie.m
+│   └── srukf_lie/
+│       ├── Prediction_SRUKF_Lie.m
+│       ├── Run_SRUKF_Lie.m
+│       └── Update_SRUKF_Lie.m
 ├── geodesy/                       # Geodetic conversions and frame transformations
 │   ├── Single_LLA_From_ECEF.m     # Karl Osen (2017) LLA from ECEF coordinate conversion
 │   ├── ECEF_From_LLA.m
@@ -113,11 +103,7 @@ IC-Vinicius/
 │   ├── Build_UKF_Lie_MEX.m
 │   ├── Build_SRUKF_Lie_MEX.m
 │   ├── Build_SPUKF_Lie_MEX.m
-│   ├── Build_SPSRUKF_Lie_MEX.m
-│   ├── Build_ESPUKF_Lie_MEX.m
 │   └── Check_MEX_Dependencies.m
-├── tests/                         # Standalone verification scripts
-│   └── Test_ESPUKF_Propagation.m  # SPUKF/ESPUKF sigma-point accuracy vs full UKF-Lie propagation
 ├── inslib/                        # Legacy navigation archive
 │   ├── addLibrary.m               # Backwards-compatible legacy path loader
 │   └── legacy/                    # Quarantined Euler/quaternion routines and aliases
@@ -145,7 +131,7 @@ benchmark_filters;
 
 % 2. Scripted mode (run specific filters/trajectories or combinations)
 traj_choice  = '1 2';         % 1: rectangular, 2: circular, 3: helicoidal, 4: all
-filt_choice  = '1 2 3 4 5 6'; % 1: EKF_Lie, 2: UKF_Lie, 3: SRUKF_Lie, 4: SPUKF_Lie, 5: SPSRUKF_Lie, 6: ESPUKF_Lie, 7: all
+filt_choice  = '1 2 3 4';     % 1: EKF_Lie, 2: UKF_Lie, 3: SRUKF_Lie, 4: SPUKF_Lie, 5: all
 use_mex      = true;          % true: compiled MEX | false: pure MATLAB .m
 enable_plots = false;         % true: show diagnostic plots
 reset_results = false;        % true: drop previously stored rows from benchmark_results.mat
@@ -162,8 +148,6 @@ Build_EKF_Lie_MEX;
 Build_UKF_Lie_MEX;
 Build_SRUKF_Lie_MEX;
 Build_SPUKF_Lie_MEX;
-Build_SPSRUKF_Lie_MEX;
-Build_ESPUKF_Lie_MEX;
 ```
 
 Requires MATLAB Coder and a supported C/C++ compiler.
